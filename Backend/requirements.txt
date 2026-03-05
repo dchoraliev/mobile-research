@@ -1,0 +1,6 @@
+fastapi
+python-multipart
+uvicorn[standard]
+motor
+pymongo
+python-dotenv
