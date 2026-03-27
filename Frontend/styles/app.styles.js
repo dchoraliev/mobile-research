@@ -1,14 +1,17 @@
 import { StyleSheet } from "react-native";
+import { colors, radius, spacing } from "./colors";
 
 export const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#101010",
+    backgroundColor: colors.bgPrimary,
   },
   container: {
     flex: 1,
-    backgroundColor: "#101010",
+    backgroundColor: colors.bgPrimary,
   },
+
+  // ── Photo viewer ──
   photoContainer: {
     flex: 3,
     backgroundColor: "#000",
@@ -22,141 +25,63 @@ export const styles = StyleSheet.create({
   noPhoto: {
     justifyContent: "center",
     alignItems: "center",
+    gap: spacing.sm,
   },
   noPhotoText: {
-    color: "#888",
-    fontSize: 16,
+    color: colors.textMuted,
+    fontSize: 14,
+    letterSpacing: 0.4,
   },
+
+  // ── Chat ──
   chatContainer: {
     flex: 3,
-    padding: 8,
+    borderTopWidth: 1,
+    borderTopColor: colors.btnBorder,
   },
-  messageRow: {
-    flexDirection: "row",
-    marginBottom: 4,
-  },
-  messageAuthor: {
-    fontWeight: "bold",
-    color: "#fff",
-    marginRight: 4,
-  },
-  messageText: {
-    color: "#eee",
-  },
-  systemMessage: {
-    fontStyle: "italic",
-    color: "#9acd32",
-    marginBottom: 4,
-  },
+
+  // ── Bottom bar ──
   bottomBar: {
-    paddingHorizontal: 8,
-    paddingBottom: 8,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderTopWidth: 1,
+    borderTopColor: colors.btnBorder,
+    backgroundColor: colors.bgSecondary,
+    gap: spacing.sm,
   },
   buttonRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 8,
+    gap: spacing.sm,
   },
-  button: {
-    flex: 1,
-    backgroundColor: "#444",
-    padding: 10,
-    marginHorizontal: 4,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "600",
-  },
+
+  // ── Input row ──
   inputRow: {
     flexDirection: "row",
     alignItems: "center",
+    gap: spacing.sm,
   },
   input: {
     flex: 1,
-    backgroundColor: "#222",
-    color: "#fff",
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    marginRight: 8,
+    backgroundColor: colors.bgInput,
+    color: colors.textPrimary,
+    borderRadius: radius.full,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    fontSize: 15,
+    borderWidth: 1,
+    borderColor: colors.btnBorder,
   },
   sendButton: {
-    backgroundColor: "#1e90ff",
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    backgroundColor: colors.accent,
+    borderRadius: radius.full,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    justifyContent: "center",
+    alignItems: "center",
   },
   sendButtonText: {
     color: "#fff",
-    fontWeight: "600",
-  },
-  cameraModal: {
-    flex: 1,
-    backgroundColor: "#000",
-  },
-  cameraView: {
-    flex: 1,
-  },
-  cameraControls: {
-    padding: 16,
-    flexDirection: "row",
-    justifyContent: "space-around",
-    backgroundColor: "#000",
-  },
-  cameraButton: {
-    backgroundColor: "#1e90ff",
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 8,
-  },
-  cameraCancel: {
-    backgroundColor: "#555",
-  },
-  cameraButtonText: {
-    color: "#fff",
-    fontWeight: "600",
-  },
-  browseModal: {
-    flex: 1,
-    backgroundColor: "#101010",
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#fff",
-    textAlign: "center",
-    marginVertical: 10,
-  },
-  photosGrid: {
-    paddingHorizontal: 8,
-  },
-  photoItem: {
-    flex: 1,
-    margin: 6,
-    alignItems: "center",
-  },
-  photoThumbnail: {
-    width: 140,
-    height: 140,
-    borderRadius: 8,
-    marginBottom: 4,
-  },
-  photoName: {
-    color: "#ddd",
-    fontSize: 12,
-    textAlign: "center",
-  },
-  closeModalButton: {
-    backgroundColor: "#444",
-    padding: 12,
-    margin: 12,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  closeModalText: {
-    color: "#fff",
-    fontWeight: "600",
+    fontWeight: "700",
+    fontSize: 14,
   },
 });

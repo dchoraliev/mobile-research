@@ -1,29 +1,39 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from typing import List
+from fastapi.responses import StreamingResponse
+from pydantic import BaseModel
+from typing import List, Optional, Annotated
 import os
 import uuid
+import io
+import json
 from datetime import datetime
 
+from search import search, format_context
+
 app = FastAPI()
-# ======== CORS (HTTP) ========
-origins = ["*"]
+
+# ── CORS ──
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# ======== IMAGE STORAGE CONFIG ========
+
+# ── Image storage ──
 UPLOAD_DIR = "/tmp/uploads"
-# Make sure the upload directory exists
 os.makedirs(UPLOAD_DIR, exist_ok=True)
-# Mount static files so images are served at /images/<filename>
 app.mount("/images", StaticFiles(directory=UPLOAD_DIR), name="images")
 
-# ========= CHAT WEBSOCKET (EXISTING) =========
+ALLOWED_CONTENT_TYPES = ("image/jpeg", "image/png", "image/jpg")
+
+
+# ══════════════════════════════════════════════
+#   WebSocket chat
+# ══════════════════════════════════════════════
 
 class ConnectionManager:
     def __init__(self):
@@ -40,102 +50,112 @@ class ConnectionManager:
         print(f"Client disconnected. Total: {len(self.active_connections)}")
 
     async def broadcast(self, message: str):
-        # Send the message to all connected clients
         for connection in list(self.active_connections):
             try:
                 await connection.send_text(message)
-            except Exception as e:
-                print("Error sending to a client:", e)
+            except (RuntimeError, OSError) as e:
+                print("Error sending to client:", e)
 
 
 manager = ConnectionManager()
 
+
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)
-
     try:
         while True:
             data = await websocket.receive_text()
-            print(f"Received from client: {data}")
-
-            # Broadcast whatever text we got (JSON from frontend)
+            print(f"Received: {data}")
             await manager.broadcast(data)
-
     except WebSocketDisconnect:
         manager.disconnect(websocket)
-    except Exception as e:
-        print("Unexpected error in websocket:", e)
+    except RuntimeError as e:
+        print("WebSocket error:", e)
         manager.disconnect(websocket)
         try:
             await websocket.close()
-        except:
+        except RuntimeError:
             pass
-        
+
+
 @app.get("/")
 async def root():
     return {"message": "FastAPI WebSocket chat server is running"}
 
-# ========= IMAGE UPLOAD & LISTING =========
+
+# ══════════════════════════════════════════════
+#   Photo upload & listing
+# ══════════════════════════════════════════════
 
 @app.post("/upload-photo")
-async def upload_photo(file: UploadFile = File(...)):
-    """
-    Upload a photo from React Native.
-    Saves it to disk and returns info including a URL usable in the app.
-    """
-
-    print(f"/upload-photo called with filename={file.filename}, type={file.content_type}")
-
-    # Basic validation – allow only some content types
-    if file.content_type not in ("image/jpeg", "image/png", "image/jpg"):
+async def upload_photo(file: Annotated[UploadFile, File()]):
+    if file.content_type not in ALLOWED_CONTENT_TYPES:
         raise HTTPException(status_code=400, detail="Invalid image type")
 
-    # Create a unique filename
     ext = os.path.splitext(file.filename)[1] or ".jpg"
     unique_name = f"{uuid.uuid4().hex}{ext}"
     file_path = os.path.join(UPLOAD_DIR, unique_name)
 
-    # Save file to disk
     contents = await file.read()
     with open(file_path, "wb") as f:
         f.write(contents)
 
-    # Build URL path (the React Native app will prefix with backend base URL)
-    url_path = f"/images/{unique_name}"
-
-    # Optional metadata (e.g., upload time)
     uploaded_at = datetime.utcnow().isoformat() + "Z"
-
-    print(f" Saved file to {file_path}, url_path={url_path}")
+    print(f"Saved {file_path}")
 
     return {
         "filename": unique_name,
-        "url": url_path,
+        "url": f"/images/{unique_name}",
         "uploaded_at": uploaded_at,
         "content_type": file.content_type,
     }
-    
+
+
 @app.get("/photos")
 async def list_photos():
-    """
-    List all available photos in the uploads directory.
-    Returns an array of { filename, url }.
-    """
-
-    files = []
-    for fname in os.listdir(UPLOAD_DIR):
-        # Simple filter: only image-looking files
-        if fname.lower().endswith((".jpg", ".jpeg", ".png")):
-            files.append(
-                {
-                    "filename": fname,
-                    "url": f"/images/{fname}",
-                }
-            )
-
-    # Sort: newest last (optional – here just alphabetical)
+    files = [
+        {"filename": f, "url": f"/images/{f}"}
+        for f in os.listdir(UPLOAD_DIR)
+        if f.lower().endswith((".jpg", ".jpeg", ".png"))
+    ]
     files.sort(key=lambda x: x["filename"])
-
     return {"photos": files}
-  
+
+
+# ══════════════════════════════════════════════
+#   RAG — knowledge base search
+# ══════════════════════════════════════════════
+
+class SearchRequest(BaseModel):
+    query: str
+    ocr_text: Optional[str] = None
+    max_results: int = 5
+
+
+@app.post("/search")
+async def search_knowledge_base(req: SearchRequest):
+    """
+    Search the local SQLite FTS5 knowledge base.
+    Combines user query and OCR text for better keyword coverage.
+    Returns matching chunks and a formatted context string.
+    LLM integration is added in the next phase.
+    """
+    combined = " ".join(filter(None, [req.query, req.ocr_text]))
+    results = search(combined, max_results=req.max_results)
+    context = format_context(results)
+
+    context_status = (
+        "none" if not results
+        else "found"
+    )
+
+    return {
+        "query": req.query,
+        "ocr_text": req.ocr_text,
+        "context_status": context_status,
+        "results": results,
+        "context": context,
+        "sources": list({r["source"] for r in results}),
+        "result_count": len(results),
+    }

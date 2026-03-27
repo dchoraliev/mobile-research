@@ -1,6 +1,6 @@
 fastapi
-python-multipart
 uvicorn[standard]
-motor
-pymongo
+python-multipart
 python-dotenv
+nltk
+pymupdf

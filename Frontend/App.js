@@ -1,50 +1,40 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  FlatList,
-  Image,
-  Modal,
-  Alert,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { CameraView, useCameraPermissions } from "expo-camera";
+import { useEffect, useRef, useState } from "react";
+import { View, Alert, KeyboardAvoidingView, Platform } from "react-native";
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+import { useCameraPermissions } from "expo-camera";
+
 import { BACKEND_HTTP, BACKEND_WS } from "./config";
 import { styles } from "./styles/app.styles";
 
+import PhotoViewer from "./components/PhotoViewer";
+import MessageList from "./components/MessageList";
+import ChatInput from "./components/ChatInput";
+import IconButton from "./components/IconButton";
+import CameraModal from "./components/CameraModal";
+import BrowseModal from "./components/BrowseModal";
+
 export default function App() {
-  // --- WebSocket & Chat state ---
   const socketRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState("");
   const [author] = useState("Device");
-
-  // --- Shared photo state ---
   const [currentPhotoUrl, setCurrentPhotoUrl] = useState(null);
-
-  // --- Photo list (for browsing from backend) ---
-  const [photos, setPhotos] = useState([]);
-  const [browseModalVisible, setBrowseModalVisible] = useState(false);
-
-  // --- Camera state ---
-  const [cameraPermission, requestCameraPermission] = useCameraPermissions();
   const [cameraModalVisible, setCameraModalVisible] = useState(false);
-  const cameraRef = useRef(null);
+  const [browseModalVisible, setBrowseModalVisible] = useState(false);
+  const [, requestCameraPermission] = useCameraPermissions();
 
-  // =============================
-  //      LOAD HISTORY ON MOUNT
-  // =============================
+  // Pending capture — set after a photo is taken, cleared after query
+  const [pendingCapture, setPendingCapture] = useState(null);
+  const [querying, setQuerying] = useState(false);
+
+  // ── Load history on mount ──
   useEffect(() => {
     const loadHistory = async () => {
       try {
         const res = await fetch(`${BACKEND_HTTP}/history`);
         if (res.ok) {
           const json = await res.json();
-          if (json.messages?.length) {
-            setMessages(json.messages);
-          }
+          if (json.messages?.length) setMessages(json.messages);
         }
       } catch (err) {
         console.log("Could not load history:", err);
@@ -53,334 +43,222 @@ export default function App() {
     loadHistory();
   }, []);
 
-  // =============================
-  //      WEBSOCKET HANDLING
-  // =============================
+  // ── WebSocket ──
   useEffect(() => {
-    console.log("Connecting to WS:", BACKEND_WS);
     const socket = new WebSocket(BACKEND_WS);
     socketRef.current = socket;
 
-    socket.onopen = () => {
-      console.log("WebSocket connected");
-    };
+    socket.onopen = () => console.log("WebSocket connected");
 
     socket.onmessage = (event) => {
-      console.log("WebSocket message:", event.data);
       try {
         const msg = JSON.parse(event.data);
-
         if (msg.type === "photo_select") {
-          if (msg.url) {
-            setCurrentPhotoUrl(msg.url);
-          }
-          setMessages((prev) => [
-            ...prev,
-            {
-              type: "system",
-              text: `${msg.author ?? "Someone"} selected a new photo`,
-              timestamp: msg.timestamp,
-            },
-          ]);
-        } else if (msg.type === "text") {
-          setMessages((prev) => [...prev, msg]);
+          if (msg.url) setCurrentPhotoUrl(msg.url);
+          addMessage({
+            type: "system",
+            text: `${msg.author ?? "Someone"} selected a new photo`,
+            timestamp: msg.timestamp,
+          });
         } else {
           setMessages((prev) => [...prev, msg]);
         }
       } catch (err) {
-        console.log("Error parsing incoming message:", err);
+        console.log("Error parsing message:", err);
       }
     };
 
-    socket.onerror = (err) => {
-      console.log("WebSocket error:", err.message || err);
-    };
+    socket.onerror = (err) => console.log("WebSocket error:", err.message || err);
+    socket.onclose = (e) => console.log("WebSocket closed:", e.code, e.reason);
 
-    socket.onclose = (event) => {
-      console.log("WebSocket closed:", event.code, event.reason);
-    };
-
-    return () => {
-      socket.close();
-    };
+    return () => socket.close();
   }, []);
 
-  const sendTextMessage = () => {
-    const trimmed = inputText.trim();
-    if (!trimmed || socketRef.current?.readyState !== 1) {
-      return;
-    }
-
-    const msg = {
-      type: "text",
-      author,
-      text: trimmed,
-      timestamp: new Date().toISOString(),
-    };
-
-    socketRef.current.send(JSON.stringify(msg));
-    setInputText("");
-  };
+  // ── Helpers ──
+  const addMessage = (msg) =>
+    setMessages((prev) => [...prev, { ...msg, timestamp: msg.timestamp ?? new Date().toISOString() }]);
 
   const broadcastPhotoSelection = (fullUrl) => {
     if (socketRef.current?.readyState !== 1) return;
-
-    const msg = {
+    socketRef.current.send(JSON.stringify({
       type: "photo_select",
       author,
       url: fullUrl,
       timestamp: new Date().toISOString(),
-    };
-
-    socketRef.current.send(JSON.stringify(msg));
+    }));
   };
 
-  // =============================
-  //         CAMERA LOGIC
-  // =============================
-  const openCamera = async () => {
-    if (!cameraPermission) {
-      await requestCameraPermission();
+  // ── Send message — routes to RAG query if capture is pending ──
+  const sendTextMessage = async () => {
+    const trimmed = inputText.trim();
+    if (!trimmed) return;
+
+    if (pendingCapture) {
+      await sendRagQuery(trimmed);
       return;
     }
 
-    if (!cameraPermission.granted) {
-      const status = await requestCameraPermission();
-      if (!status.granted) {
-        Alert.alert(
-          "Permission required",
-          "Camera permission is needed to take photos."
-        );
-        return;
-      }
-    }
-
-    setCameraModalVisible(true);
+    if (socketRef.current?.readyState !== 1) return;
+    socketRef.current.send(JSON.stringify({
+      type: "text",
+      author,
+      text: trimmed,
+      timestamp: new Date().toISOString(),
+    }));
+    setInputText("");
   };
 
-  const takePictureAndUpload = async () => {
-    if (!cameraRef.current) return;
+  // ── RAG query — search KB, show results (no LLM yet) ──
+  const sendRagQuery = async (userQuery) => {
+    setQuerying(true);
+    setInputText("");
+
+    addMessage({ type: "text", author, text: userQuery });
+
+    if (pendingCapture.ocrText) {
+      addMessage({
+        type: "system",
+        text: `OCR: "${pendingCapture.ocrText.slice(0, 100)}${pendingCapture.ocrText.length > 100 ? "…" : ""}"`,
+      });
+    }
+
+    addMessage({ type: "system", text: "Searching knowledge base..." });
 
     try {
-      const photo = await cameraRef.current.takePictureAsync();
-      console.log("Photo taken:", photo.uri);
-
-      const formData = new FormData();
-      formData.append("file", {
-        uri: photo.uri,
-        name: `photo-${Date.now()}.jpg`,
-        type: "image/jpeg",
-      });
-
-      console.log("Uploading to:", `${BACKEND_HTTP}/upload-photo`);
-
-      const res = await fetch(`${BACKEND_HTTP}/upload-photo`, {
+      const res = await fetch(`${BACKEND_HTTP}/search`, {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: userQuery,
+          ocr_text: pendingCapture.ocrText ?? "",
+        }),
       });
 
-      console.log("Upload response status:", res.status);
-      const textBody = await res.text();
-      console.log("Raw response body:", textBody);
-
       if (!res.ok) {
-        Alert.alert("Upload failed", `Status: ${res.status}`);
-        return;
-      }
-
-      let json;
-      try {
-        json = JSON.parse(textBody);
-      } catch (e) {
-        console.log("Error parsing JSON:", e);
-        Alert.alert("Error", "Could not parse server response.");
-        return;
-      }
-
-      if (!json.url) {
-        Alert.alert("Error", "Server did not return a URL.");
-        return;
-      }
-
-      const fullUrl = `${BACKEND_HTTP}${json.url}`;
-      console.log("Full photo URL:", fullUrl);
-
-      broadcastPhotoSelection(fullUrl);
-      setCurrentPhotoUrl(fullUrl);
-      setCameraModalVisible(false);
-    } catch (err) {
-      console.error("Error taking/uploading photo:", err);
-      Alert.alert("Error", "Could not take or upload photo.");
-    }
-  };
-
-  // =============================
-  //        BROWSE PHOTOS
-  // =============================
-  const openBrowsePhotos = async () => {
-    try {
-      const res = await fetch(`${BACKEND_HTTP}/photos`);
-      if (!res.ok) {
-        Alert.alert("Error", "Could not fetch photos");
+        addMessage({ type: "system", text: "Search failed. Check that the backend is running." });
         return;
       }
 
       const json = await res.json();
-      setPhotos(json.photos ?? []);
-      setBrowseModalVisible(true);
+
+      if (json.context_status === "none") {
+        addMessage({
+          type: "system",
+          text: "No matching documents found in the knowledge base.",
+        });
+        addMessage({
+          type: "text",
+          author: "System",
+          text: "⚠️ No knowledge base results — LLM integration coming in the next phase.",
+        });
+      } else {
+        addMessage({
+          type: "system",
+          text: `Found ${json.result_count} result(s) from: ${json.sources.join(", ")}`,
+        });
+
+        // Show each context chunk as a message
+        json.results.forEach((chunk, i) => {
+          addMessage({
+            type: "text",
+            author: `📄 ${chunk.source}`,
+            text: chunk.content,
+          });
+        });
+
+        addMessage({
+          type: "system",
+          text: "LLM integration coming in the next phase — context retrieved successfully.",
+        });
+      }
     } catch (err) {
-      console.error("Error fetching photos:", err);
-      Alert.alert("Error", "Could not fetch photos");
+      console.error("RAG search error:", err);
+      addMessage({ type: "system", text: "Could not reach the backend." });
+    } finally {
+      setQuerying(false);
+      setPendingCapture(null);
     }
   };
 
-  const handleSelectPhotoFromList = (photo) => {
-    const fullUrl = `${BACKEND_HTTP}${photo.url}`;
+  // ── Camera ──
+  const openCamera = async () => {
+    const permission = await requestCameraPermission();
+    if (!permission.granted) {
+      Alert.alert("Permission required", "Camera permission is needed to take photos.");
+      return;
+    }
+    setCameraModalVisible(true);
+  };
+
+  const handlePhotoCaptured = ({ photoUrl, ocrText, imageBase64 }) => {
+    setCurrentPhotoUrl(photoUrl);
+    broadcastPhotoSelection(photoUrl);
+    setPendingCapture({ photoUrl, ocrText, imageBase64 });
+
+    addMessage({
+      type: "system",
+      text: ocrText
+        ? `Photo captured · OCR found text (${ocrText.length} chars) · Type your question`
+        : "Photo captured · No text detected · Type your question to search the knowledge base",
+    });
+  };
+
+  const handlePhotoSelected = (fullUrl) => {
     setCurrentPhotoUrl(fullUrl);
     broadcastPhotoSelection(fullUrl);
-    setBrowseModalVisible(false);
-  };
-
-  // =============================
-  //           RENDER
-  // =============================
-  const renderMessageItem = ({ item }) => {
-    if (item.type === "system") {
-      return <Text style={styles.systemMessage}>{item.text}</Text>;
-    }
-
-    if (item.type === "text") {
-      return (
-        <View style={styles.messageRow}>
-          <Text style={styles.messageAuthor}>{item.author ?? "User"}:</Text>
-          <Text style={styles.messageText}>{item.text}</Text>
-        </View>
-      );
-    }
-
-    return <Text style={styles.messageText}>{JSON.stringify(item)}</Text>;
-  };
-
-  const renderPhotoItem = ({ item }) => {
-    const fullUrl = `${BACKEND_HTTP}${item.url}`;
-    return (
-      <TouchableOpacity
-        style={styles.photoItem}
-        onPress={() => handleSelectPhotoFromList(item)}
-      >
-        <Image
-          source={{ uri: fullUrl }}
-          style={styles.photoThumbnail}
-          resizeMode="cover"
-        />
-        <Text style={styles.photoName}>{item.filename}</Text>
-      </TouchableOpacity>
-    );
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        {/* TOP: Shared photo */}
-        <View style={styles.photoContainer}>
-          {currentPhotoUrl ? (
-            <Image
-              source={{ uri: currentPhotoUrl }}
-              style={styles.sharedPhoto}
-              resizeMode="contain"
-            />
-          ) : (
-            <View style={styles.noPhoto}>
-              <Text style={styles.noPhotoText}>No photo selected</Text>
-            </View>
-          )}
-        </View>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.safeArea}>
+        <KeyboardAvoidingView
+          style={styles.container}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 24}
+        >
+          <PhotoViewer photoUrl={currentPhotoUrl} />
 
-        {/* MIDDLE: Chat messages */}
-        <View style={styles.chatContainer}>
-          <FlatList
-            data={messages}
-            keyExtractor={(_, index) => index.toString()}
-            renderItem={renderMessageItem}
-          />
-        </View>
-
-        {/* BOTTOM: Input + buttons */}
-        <View style={styles.bottomBar}>
-          <View style={styles.buttonRow}>
-            <TouchableOpacity style={styles.button} onPress={openCamera}>
-              <Text style={styles.buttonText}>Take Photo</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.button} onPress={openBrowsePhotos}>
-              <Text style={styles.buttonText}>Browse Photos</Text>
-            </TouchableOpacity>
+          <View style={styles.chatContainer}>
+            <MessageList messages={messages} />
           </View>
 
-          <View style={styles.inputRow}>
-            <TextInput
-              style={styles.input}
+          <View style={styles.bottomBar}>
+            <View style={styles.buttonRow}>
+              <IconButton label="📷  Camera" onPress={openCamera} />
+              <IconButton label="🖼  Browse" onPress={() => setBrowseModalVisible(true)} />
+              {pendingCapture && (
+                <IconButton
+                  label="✕  Clear"
+                  variant="primary"
+                  onPress={() => {
+                    setPendingCapture(null);
+                    setInputText("");
+                  }}
+                />
+              )}
+            </View>
+            <ChatInput
               value={inputText}
               onChangeText={setInputText}
-              placeholder="Type a message..."
+              onSend={sendTextMessage}
+              placeholder={pendingCapture ? "Ask a question about the photo..." : "Type a message..."}
+              disabled={querying}
             />
-            <TouchableOpacity
-              style={styles.sendButton}
-              onPress={sendTextMessage}
-            >
-              <Text style={styles.sendButtonText}>Send</Text>
-            </TouchableOpacity>
           </View>
-        </View>
 
-        {/* CAMERA MODAL */}
-        <Modal visible={cameraModalVisible} animationType="slide">
-          <View style={styles.cameraModal}>
-            <CameraView
-              ref={cameraRef}
-              style={styles.cameraView}
-              facing="back"
-            />
-            <View style={styles.cameraControls}>
-              <TouchableOpacity
-                style={styles.cameraButton}
-                onPress={takePictureAndUpload}
-              >
-                <Text style={styles.cameraButtonText}>Capture & Upload</Text>
-              </TouchableOpacity>
+          <CameraModal
+            visible={cameraModalVisible}
+            onClose={() => setCameraModalVisible(false)}
+            onPhotoCaptured={handlePhotoCaptured}
+          />
 
-              <TouchableOpacity
-                style={[styles.cameraButton, styles.cameraCancel]}
-                onPress={() => setCameraModalVisible(false)}
-              >
-                <Text style={styles.cameraButtonText}>Cancel</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-
-        {/* BROWSE PHOTOS MODAL */}
-        <Modal visible={browseModalVisible} animationType="slide">
-          <SafeAreaView style={styles.browseModal}>
-            <Text style={styles.modalTitle}>Select a photo</Text>
-            <FlatList
-              data={photos}
-              keyExtractor={(item) => item.filename}
-              renderItem={renderPhotoItem}
-              numColumns={2}
-              contentContainerStyle={styles.photosGrid}
-            />
-            <TouchableOpacity
-              style={styles.closeModalButton}
-              onPress={() => setBrowseModalVisible(false)}
-            >
-              <Text style={styles.closeModalText}>Close</Text>
-            </TouchableOpacity>
-          </SafeAreaView>
-        </Modal>
-      </View>
-    </SafeAreaView>
+          <BrowseModal
+            visible={browseModalVisible}
+            onClose={() => setBrowseModalVisible(false)}
+            onSelectPhoto={handlePhotoSelected}
+          />
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
-
-
