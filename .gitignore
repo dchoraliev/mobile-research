@@ -20,3 +20,8 @@ npm-debug.log*
 
 # Expo
 .expo-shared/
+
+# Allow .txt files in Backend/docs/
+!Backend/docs/*.txt
+
+knowledge.db

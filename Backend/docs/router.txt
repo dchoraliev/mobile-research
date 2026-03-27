@@ -1,0 +1,4 @@
+Model: RT-AX55. Default network name: ASUS_24. Default password: printed on bottom label.
+Admin interface accessible at 192.168.1.1 in any browser.
+Reset to factory settings by holding the reset button for 10 seconds.
+Supports 2.4GHz and 5GHz bands. Maximum range approximately 100 meters indoors.
