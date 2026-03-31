@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { Modal, View, TouchableOpacity, Text, Alert, ActivityIndicator } from "react-native";
 import { CameraView } from "expo-camera";
-import * as TextRecognition from "expo-text-recognition";
+import { createWorker } from "tesseract.js";
 import { cameraStyles as styles } from "../styles/camera.styles";
 import { BACKEND_HTTP } from "../config";
 
@@ -19,12 +19,14 @@ export default function CameraModal({ visible, onClose, onPhotoCaptured }) {
       setStatus("Capturing...");
       const photo = await cameraRef.current.takePictureAsync({ base64: true });
 
-      // Step 2: OCR on device (runs at full quality, before any upload)
+      // Step 2: OCR using tesseract.js (pure JS, works in Expo Go)
       setStatus("Reading text...");
       let ocrText = "";
       try {
-        const result = await TextRecognition.recognize(photo.uri);
-        ocrText = result.join(" ").trim();
+        const worker = await createWorker("eng");
+        const { data } = await worker.recognize(photo.uri);
+        ocrText = data.text.trim();
+        await worker.terminate();
         console.log("OCR result:", ocrText);
       } catch (ocrErr) {
         console.log("OCR failed (non-fatal):", ocrErr);
