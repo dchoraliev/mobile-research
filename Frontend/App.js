@@ -55,11 +55,15 @@ export default function App() {
         const msg = JSON.parse(event.data);
         if (msg.type === "photo_select") {
           if (msg.url) setCurrentPhotoUrl(msg.url);
-          addMessage({
-            type: "system",
-            text: `${msg.author ?? "Someone"} selected a new photo`,
-            timestamp: msg.timestamp,
-          });
+          // Skip the echo of our own photo selections — the capture/browse
+          // handlers already add an appropriate message for the local device.
+          if (msg.author !== author) {
+            addMessage({
+              type: "system",
+              text: `${msg.author ?? "Someone"} selected a new photo`,
+              timestamp: msg.timestamp,
+            });
+          }
         } else {
           setMessages((prev) => [...prev, msg]);
         }
@@ -68,7 +72,8 @@ export default function App() {
       }
     };
 
-    socket.onerror = (err) => console.log("WebSocket error:", err.message || err);
+    socket.onerror = (err) =>
+      console.log("WebSocket error:", err.message || err);
     socket.onclose = (e) => console.log("WebSocket closed:", e.code, e.reason);
 
     return () => socket.close();
@@ -76,16 +81,21 @@ export default function App() {
 
   // ── Helpers ──
   const addMessage = (msg) =>
-    setMessages((prev) => [...prev, { ...msg, timestamp: msg.timestamp ?? new Date().toISOString() }]);
+    setMessages((prev) => [
+      ...prev,
+      { ...msg, timestamp: msg.timestamp ?? new Date().toISOString() },
+    ]);
 
   const broadcastPhotoSelection = (fullUrl) => {
     if (socketRef.current?.readyState !== 1) return;
-    socketRef.current.send(JSON.stringify({
-      type: "photo_select",
-      author,
-      url: fullUrl,
-      timestamp: new Date().toISOString(),
-    }));
+    socketRef.current.send(
+      JSON.stringify({
+        type: "photo_select",
+        author,
+        url: fullUrl,
+        timestamp: new Date().toISOString(),
+      }),
+    );
   };
 
   // ── Send message — routes to RAG query if capture is pending ──
@@ -93,32 +103,21 @@ export default function App() {
     const trimmed = inputText.trim();
     if (!trimmed) return;
 
-    if (pendingCapture) {
-      await sendRagQuery(trimmed);
-      return;
-    }
-
-    if (socketRef.current?.readyState !== 1) return;
-    socketRef.current.send(JSON.stringify({
-      type: "text",
-      author,
-      text: trimmed,
-      timestamp: new Date().toISOString(),
-    }));
-    setInputText("");
+    const capture = pendingCapture ?? { photoUrl: null, ocrText: "", imageBase64: null };
+    await sendRagQuery(trimmed, capture);
   };
 
   // ── RAG query — search KB, show results (no LLM yet) ──
-  const sendRagQuery = async (userQuery) => {
+  const sendRagQuery = async (userQuery, capture) => {
     setQuerying(true);
     setInputText("");
 
     addMessage({ type: "text", author, text: userQuery });
 
-    if (pendingCapture.ocrText) {
+    if (capture.ocrText) {
       addMessage({
         type: "system",
-        text: `OCR: "${pendingCapture.ocrText.slice(0, 100)}${pendingCapture.ocrText.length > 100 ? "…" : ""}"`,
+        text: `OCR: "${capture.ocrText.slice(0, 100)}${capture.ocrText.length > 100 ? "…" : ""}"`,
       });
     }
 
@@ -130,12 +129,16 @@ export default function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           query: userQuery,
-          ocr_text: pendingCapture.ocrText ?? "",
+          ocr_text: capture.ocrText ?? "",
+          image_base64: capture.imageBase64 ?? null,
         }),
       });
 
       if (!res.ok) {
-        addMessage({ type: "system", text: "Search failed. Check that the backend is running." });
+        addMessage({
+          type: "system",
+          text: "Search failed. Check that the backend is running.",
+        });
         return;
       }
 
@@ -157,19 +160,13 @@ export default function App() {
           text: `Found ${json.result_count} result(s) from: ${json.sources.join(", ")}`,
         });
 
-        // Show each context chunk as a message
-        json.results.forEach((chunk, i) => {
+        if (json.answer) {
           addMessage({
             type: "text",
-            author: `📄 ${chunk.source}`,
-            text: chunk.content,
+            author: "Assistant",
+            text: json.answer,
           });
-        });
-
-        addMessage({
-          type: "system",
-          text: "LLM integration coming in the next phase — context retrieved successfully.",
-        });
+        }
       }
     } catch (err) {
       console.error("RAG search error:", err);
@@ -184,7 +181,10 @@ export default function App() {
   const openCamera = async () => {
     const permission = await requestCameraPermission();
     if (!permission.granted) {
-      Alert.alert("Permission required", "Camera permission is needed to take photos.");
+      Alert.alert(
+        "Permission required",
+        "Camera permission is needed to take photos.",
+      );
       return;
     }
     setCameraModalVisible(true);
@@ -203,9 +203,32 @@ export default function App() {
     });
   };
 
-  const handlePhotoSelected = (fullUrl) => {
+  const handlePhotoSelected = async ({ fullUrl, filename }) => {
     setCurrentPhotoUrl(fullUrl);
     broadcastPhotoSelection(fullUrl);
+
+    addMessage({ type: "system", text: "Photo selected · Running OCR..." });
+
+    let ocrText = "";
+    try {
+      const res = await fetch(`${BACKEND_HTTP}/ocr-from-stored`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ filename }),
+      });
+      const json = await res.json();
+      ocrText = json.text ?? "";
+    } catch {
+      // OCR failure is non-fatal — proceed with empty text
+    }
+
+    setPendingCapture({ photoUrl: fullUrl, ocrText, imageBase64: null });
+    addMessage({
+      type: "system",
+      text: ocrText
+        ? `OCR found text (${ocrText.length} chars) · Type your question`
+        : "No text detected · Type your question to search the knowledge base",
+    });
   };
 
   return (
@@ -225,7 +248,10 @@ export default function App() {
           <View style={styles.bottomBar}>
             <View style={styles.buttonRow}>
               <IconButton label="📷  Camera" onPress={openCamera} />
-              <IconButton label="🖼  Browse" onPress={() => setBrowseModalVisible(true)} />
+              <IconButton
+                label="🖼  Browse"
+                onPress={() => setBrowseModalVisible(true)}
+              />
               {pendingCapture && (
                 <IconButton
                   label="✕  Clear"
@@ -241,16 +267,14 @@ export default function App() {
               value={inputText}
               onChangeText={setInputText}
               onSend={sendTextMessage}
-              placeholder={pendingCapture ? "Ask a question about the photo..." : "Type a message..."}
+              placeholder={
+                pendingCapture
+                  ? "Ask a question about the photo..."
+                  : "Type a message..."
+              }
               disabled={querying}
             />
           </View>
-
-          <CameraModal
-            visible={cameraModalVisible}
-            onClose={() => setCameraModalVisible(false)}
-            onPhotoCaptured={handlePhotoCaptured}
-          />
 
           <BrowseModal
             visible={browseModalVisible}
@@ -259,6 +283,13 @@ export default function App() {
           />
         </KeyboardAvoidingView>
       </SafeAreaView>
+
+      {/* Camera overlay rendered outside SafeAreaView so absoluteFillObject covers the full screen */}
+      <CameraModal
+        visible={cameraModalVisible}
+        onClose={() => setCameraModalVisible(false)}
+        onPhotoCaptured={handlePhotoCaptured}
+      />
     </SafeAreaProvider>
   );
 }

@@ -1,0 +1,87 @@
+Midea Infrared Quartz Heater - Model MSH20Q3AWWV
+Full Product Specification and User Guide
+
+Product Overview
+The Midea MSH20Q3AWWV is an infrared quartz heater manufactured by Midea Consumer Electric (Vietnam) Co., Ltd. It is designed for personal and room heating in residential and office environments. The unit operates on standard North American household current and requires no installation. It is UL Listed under standard 1278, confirming it meets safety requirements for electric heaters in the United States and Canada.
+
+Electrical Specifications
+Voltage: 120V AC
+Frequency: 60Hz
+Power Consumption: 1500W
+The heater draws approximately 12.5 amps at full power. It should be plugged into a dedicated 15-amp circuit where possible. Do not use with extension cords or power strips, as the high current draw can cause overheating in undersized wiring.
+
+Heating Technology
+The MSH20Q3AWWV uses infrared quartz heating elements. Unlike convection heaters that warm the air, infrared heaters emit radiant heat that warms objects and people directly in the line of the heat beam. This makes infrared heating more efficient in drafty spaces or rooms with high ceilings, as the heat is not lost to air circulation. The quartz element heats up within seconds of being powered on and cools down quickly after being turned off.
+
+Safety Certifications
+UL Listed: Yes
+UL Standard: 1278 (Electric Heating Appliances — Space Heaters)
+Listing Number: E190384
+Factory ID: V2
+Date Code: 0625 (June 2025 production)
+Country of Manufacture: Vietnam
+
+The UL 1278 standard covers construction, performance, and safety of electric space heaters including tip-over protection, overheat protection, and surface temperature limits.
+
+Safety Features
+The MSH20Q3AWWV includes the following safety features:
+
+- Tip-over protection: The unit automatically shuts off if knocked over or tilted beyond a safe angle
+- Overheat protection: An internal thermal cutoff activates if the unit reaches unsafe internal temperatures
+- Cool-touch housing: The outer casing remains at a safe temperature during operation
+- Auto shut-off timer (where applicable by model variant)
+
+Operating Instructions
+
+1. Place the heater on a flat, stable surface at least 3 feet away from flammable materials including curtains, furniture, and bedding
+1. Plug into a standard 120V wall outlet
+1. Select the desired heat setting using the control panel or remote (if equipped)
+1. Point the heater toward the area you want to warm
+1. Do not cover the front grill or block airflow to the unit
+
+The heater is intended for indoor use only. Do not use in bathrooms, laundry rooms, or other high-humidity environments unless the unit is specifically rated for that use.
+
+Maintenance and Care
+
+- Unplug the unit before cleaning
+- Use a dry cloth to wipe the exterior housing
+- Do not use water or cleaning solvents on any part of the heater
+- Clean the front grill periodically to remove dust buildup which can reduce heating efficiency
+- Store in a dry location during warmer months
+
+The quartz heating elements are not user-replaceable. If an element fails, contact customer service.
+
+Troubleshooting
+Unit does not turn on:
+
+- Check that the power cord is fully inserted into the outlet
+- Check that the outlet is functioning by plugging in another device
+- Verify the tip-over switch is not activated (unit must be upright on a flat surface)
+- Check that the thermal cutoff has not tripped — unplug for 15 minutes and allow to cool before restarting
+
+Unit turns off unexpectedly:
+
+- The overheat protection may have activated — check for blocked vents
+- Ensure adequate clearance around all sides of the unit
+- The tip-over sensor may have been triggered
+
+Heater produces less heat than expected:
+
+- Verify the unit is set to the highest heat setting (1500W)
+- Check that the quartz elements are glowing orange when operating
+- Dust accumulation on elements can reduce output — contact service if cleaning does not resolve
+
+Warranty and Support
+For product questions or warranty claims, contact Midea customer service at 1-866-646-4332. The standard warranty covers manufacturing defects for one year from the date of purchase. Physical damage, misuse, and normal wear are not covered.
+
+Serial Number Format
+The serial number format for this unit is: SN:XXXXXXXXXXXXXXXXXXXX
+The manufacturing order and production date are encoded in the MO and NSX fields on the product label.
+
+Product Dimensions and Weight (Approximate)
+The MSH20Q3AWWV is a tower-style infrared heater. Typical dimensions for this model class are approximately 12 inches wide, 10 inches deep, and 24 inches tall. Weight is approximately 8-10 lbs. Exact dimensions may vary by production run.
+
+Energy Efficiency Notes
+At 1500W, running this heater for 1 hour consumes 1.5 kWh of electricity. At an average US electricity rate of $0.13 per kWh, continuous operation costs approximately $0.20 per hour or about $4.50 for a full 24-hour day. Using the timer feature or lower power settings can significantly reduce operating costs.
+
+Infrared heaters are most efficient when used for zone heating — warming the specific area where people are present rather than heating an entire room. For whole-room heating, convection or forced-air heaters may be more appropriate depending on room size and insulation.

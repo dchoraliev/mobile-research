@@ -4,6 +4,12 @@ import { colors, radius, spacing } from "./colors";
 const { width } = Dimensions.get("window");
 
 export const cameraStyles = StyleSheet.create({
+  // Full-screen absolute overlay — avoids Modal's separate UIWindow on iOS
+  // which breaks AVCaptureSession (black screen + "Image could not be captured")
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 999,
+  },
   container: {
     flex: 1,
     backgroundColor: "#000",

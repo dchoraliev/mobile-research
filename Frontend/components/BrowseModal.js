@@ -24,7 +24,7 @@ export default function BrowseModal({ visible, onClose, onSelectPhoto }) {
 
   const handleSelect = (photo) => {
     const fullUrl = `${BACKEND_HTTP}${photo.url}`;
-    onSelectPhoto(fullUrl);
+    onSelectPhoto({ fullUrl, filename: photo.filename });
     onClose();
   };
 

@@ -1,99 +1,99 @@
 """
-search.py — Keyword extraction (NLTK) + SQLite FTS5 search.
+search.py — Semantic search using Chroma vector store + BGE-m3 embeddings.
+
+Replaces the previous NLTK keyword extraction + SQLite FTS5 approach.
+The query is embedded with BGE-m3 (runs locally, no API key needed)
+and compared against stored chunk vectors using cosine similarity.
 """
 
-import re
-import sqlite3
+import os
+from dotenv import load_dotenv
 
-DB_PATH = "knowledge.db"
-MAX_RESULTS = 5
+load_dotenv()
 
-# NLTK stopwords — loaded lazily
-_STOPWORDS: set[str] | None = None
+VECTORSTORE_DIR = "./vectorstore"
+COLLECTION_NAME = "knowledge_base"
+DEFAULT_K       = 5   # number of chunks to retrieve
 
-
-def _stopwords() -> set[str]:
-    global _STOPWORDS
-    if _STOPWORDS is None:
-        try:
-            from nltk.corpus import stopwords
-            import nltk
-            try:
-                _STOPWORDS = set(stopwords.words("english"))
-            except LookupError:
-                nltk.download("stopwords", quiet=True)
-                _STOPWORDS = set(stopwords.words("english"))
-        except ImportError:
-            # NLTK not installed — fall back to a small built-in set
-            _STOPWORDS = {
-                "a", "an", "the", "is", "are", "was", "were", "be", "been",
-                "being", "have", "has", "had", "do", "does", "did", "will",
-                "would", "could", "should", "may", "might", "shall", "can",
-                "to", "of", "in", "for", "on", "with", "at", "by", "from",
-                "as", "into", "through", "about", "this", "that", "these",
-                "those", "i", "you", "he", "she", "it", "we", "they",
-                "what", "which", "who", "how", "when", "where", "why",
-                "and", "or", "but", "not", "if", "so",
-            }
-    return _STOPWORDS
+# Module-level singletons — loaded once when the server starts
+_embeddings  = None
+_vectorstore = None
 
 
-def extract_keywords(text: str) -> list[str]:
-    """Extract meaningful keywords using NLTK stopwords."""
-    words = re.findall(r"[a-zA-Z0-9]{2,}", text.lower())
-    stop = _stopwords()
-    return [w for w in words if w not in stop]
+def _load_vectorstore():
+    """Load Chroma and the BGE-m3 embedding model (once per process)."""
+    global _embeddings, _vectorstore
+
+    if _vectorstore is not None:
+        return _vectorstore
+
+    if not os.path.exists(VECTORSTORE_DIR):
+        raise FileNotFoundError(
+            f"Vector store not found at {VECTORSTORE_DIR}. "
+            "Run ingest.py first to build it."
+        )
+
+    from langchain_huggingface import HuggingFaceEmbeddings
+    from langchain_chroma import Chroma
+
+    _embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-m3")
+
+    _vectorstore = Chroma(
+        persist_directory=VECTORSTORE_DIR,
+        embedding_function=_embeddings,
+        collection_name=COLLECTION_NAME,
+    )
+
+    print("Vector store loaded.")
+    return _vectorstore
 
 
-def build_fts_query(keywords: list[str]) -> str:
-    """Build an FTS5 OR query from keywords."""
-    if not keywords:
-        return ""
-    # Use OR so partial matches still return results
-    return " OR ".join(keywords[:20])  # cap to avoid overly long queries
-
-
-def search(
-    query: str,
-    db_path: str = DB_PATH,
-    max_results: int = MAX_RESULTS,
-) -> list[dict]:
+def search(query: str, k: int = DEFAULT_K) -> list[dict]:
     """
-    Search the knowledge base for chunks matching the query.
-    Returns list of { source, chunk_index, content, score }.
+    Perform semantic similarity search against the Chroma vector store.
+
+    The query is embedded with BGE-m3 and compared against all stored chunk
+    vectors using cosine similarity. Returns the k most relevant chunks.
+
+    Returns list of:
+        {
+            source:        filename the chunk came from,
+            content:       the chunk text,
+            score:         cosine similarity score (higher = more relevant),
+            chunk_index:   position of the chunk in the original document,
+        }
     """
-    keywords = extract_keywords(query)
-    fts_query = build_fts_query(keywords)
+    vs = _load_vectorstore()
 
-    if not fts_query:
-        return []
+    # similarity_search_with_relevance_scores returns (Document, score) tuples
+    results_with_scores = vs.similarity_search_with_relevance_scores(query, k=k)
 
-    try:
-        conn = sqlite3.connect(db_path)
-        conn.row_factory = sqlite3.Row
-        rows = conn.execute(
-            """
-            SELECT source, chunk_index, content, rank AS score
-            FROM knowledge_base
-            WHERE knowledge_base MATCH ?
-            ORDER BY rank
-            LIMIT ?
-            """,
-            (fts_query, max_results),
-        ).fetchall()
-        conn.close()
-        return [dict(r) for r in rows]
-    except sqlite3.OperationalError as e:
-        print(f"Search error: {e}")
-        return []
+    results = []
+    for doc, score in results_with_scores:
+        source = os.path.basename(doc.metadata.get("source", "unknown"))
+        results.append({
+            "source":      source,
+            "content":     doc.page_content,
+            "score":       round(score, 4),
+            "chunk_index": doc.metadata.get("page", 0),
+        })
+
+    # Sort by score descending (most relevant first)
+    results.sort(key=lambda r: r["score"], reverse=True)
+    return results
 
 
 def format_context(results: list[dict]) -> str:
-    """Format search results into a context string for the prompt."""
+    """
+    Format retrieved chunks into a context string for the LLM prompt.
+    Each chunk is wrapped in XML-style tags with its source filename,
+    following the structure recommended in the RC architecture document.
+    """
     if not results:
         return ""
+
     parts = [
-        f"[{i}] (from {r['source']}):\n{r['content']}"
+        f'<document id="{i}" source="{r["source"]}" score="{r["score"]}">\n{r["content"]}\n</document>'
         for i, r in enumerate(results, 1)
     ]
     return "\n\n".join(parts)

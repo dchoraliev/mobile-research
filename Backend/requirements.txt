@@ -1,6 +1,27 @@
+# Web server
 fastapi
 uvicorn[standard]
 python-multipart
 python-dotenv
-nltk
+
+# Document extraction
 pymupdf
+
+# LangChain core + integrations
+langchain
+langchain-huggingface
+langchain-chroma
+langchain-text-splitters
+
+# Embeddings — runs locally, no API key needed
+sentence-transformers
+
+# Vector database
+chromadb
+
+#OpenRouter
+openai
+
+# OCR
+pillow
+pytesseract

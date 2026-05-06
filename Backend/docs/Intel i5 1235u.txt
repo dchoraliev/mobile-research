@@ -1,0 +1,50 @@
+Intel Core i5-1235U Processor — Full Specification and Technical Overview
+
+Overview
+The Intel Core i5-1235U is a 12th Generation Alder Lake-U mobile processor released in Q1 2022. It is designed for mainstream thin-and-light laptops, targeting the productivity segment where battery life and portability are prioritized over raw performance. The i5-1235U introduces Intel's hybrid architecture, combining two types of cores on a single die: Performance-cores (P-cores) and Efficient-cores (E-cores).
+
+Core and Thread Configuration
+The i5-1235U uses Intel's hybrid core architecture with 2 Performance-cores (P-cores) and 8 Efficient-cores (E-cores), for a total of 10 cores. The P-cores support Hyper-Threading, adding 2 additional threads, while the E-cores do not. This results in 12 total threads. The P-core base frequency is 1.3 GHz, with a single-core turbo boost of up to 4.4 GHz. The E-cores operate at a base of 0.9 GHz and can boost up to 3.3 GHz. Intel Thread Director technology helps the operating system assign tasks to the most appropriate core type — latency-sensitive tasks go to P-cores, background tasks to E-cores.
+
+Cache Memory
+The i5-1235U includes 12 MB of Intel Smart Cache (L3) shared across all cores. The P-cores each have 48 KB L1 data cache and 32 KB L1 instruction cache, plus 1.25 MB L2 cache. The E-cores share a 2 MB L2 cache per cluster of four E-cores. The hybrid approach means the total L2 cache available is substantial, improving performance for workloads that don't fit entirely in L3.
+
+Thermal Design and Power Configuration
+The i5-1235U has a base TDP of 9W and a maximum turbo power of 55W (PL2). This very wide power range means that under sustained loads the processor throttles back to 9-15W, but it can burst to high performance for short periods. Most laptop manufacturers configure the sustained power limit between 15W and 28W depending on the cooling solution. This processor is often found in slimmer designs where thermal headroom is limited.
+
+Memory Support
+The i5-1235U supports dual-channel memory. Compatible memory types include:
+- DDR4 up to 3200 MHz
+- DDR5 up to 4800 MHz
+- LPDDR4x up to 4267 MHz
+- LPDDR5 up to 4800 MHz
+
+Maximum supported memory capacity is 64 GB. The addition of DDR5 support is a significant upgrade over the previous generation Tiger Lake processors, offering higher bandwidth that especially benefits the integrated GPU.
+
+Integrated Graphics
+The i5-1235U includes Intel Iris Xe Graphics with 80 execution units, operating at a maximum frequency of 1.3 GHz. Although it has fewer execution units than the i7-1165G7's 96 EU configuration, the Alder Lake generation's improvements to the Xe architecture partially compensate for this difference. The GPU supports DirectX 12 Ultimate, OpenGL 4.6, Vulkan 1.2, and AV1 decode acceleration. Up to four displays can be driven simultaneously via Thunderbolt 4 and HDMI 2.1 output.
+
+Connectivity and I/O
+The i5-1235U includes Thunderbolt 4 support, USB 3.2 Gen 2, and PCIe 4.0 storage interface. The integrated WiFi 6E controller supports the 6 GHz band for lower congestion in dense wireless environments. The processor's I/O tile uses Intel's EMIB (Embedded Multi-die Interconnect Bridge) packaging technology to connect the CPU die with the platform controller hub.
+
+Manufacturing Process
+The i5-1235U is built on Intel's Intel 7 process (formerly 10nm Enhanced SuperFin). Intel 7 provides approximately 10-15% performance per watt improvement compared to the 10nm SuperFin used in Tiger Lake. The chip uses a hybrid tile design where different functional blocks are manufactured separately and connected on the package.
+
+Performance Benchmarks (Reference Values)
+In Cinebench R23, the i5-1235U achieves approximately 1600 points in single-core and 8000-9000 points in multi-core under boosted conditions. The multi-core advantage over Tiger Lake processors is substantial due to the eight E-cores contributing to parallel workloads. In sustained scenarios with power limits applied, multi-core performance may drop to 5000-6000 points. PCMark 10 scores typically range from 4800 to 5800.
+
+Comparison with Previous Generation
+Compared to the i7-1165G7 (Tiger Lake), the i5-1235U offers better multi-threaded performance despite being positioned one tier lower in Intel's naming scheme. The addition of E-cores provides significant parallelism for background tasks and lightly-threaded workloads. Single-core performance is slightly improved due to higher peak turbo frequencies. However, the i5-1235U's GPU has fewer execution units than the i7-1165G7.
+
+Recommended Use Cases
+The i5-1235U is well-suited for:
+- Office productivity, web browsing, and communications
+- Light software development
+- Background tasks running alongside main workloads (thanks to E-cores)
+- Multimedia consumption and streaming
+- Light photo editing
+
+It is not recommended for:
+- Sustained heavy workloads requiring consistent high performance
+- GPU-intensive tasks such as gaming or 3D modeling
+- Professional video editing requiring long encode sessions

@@ -12,6 +12,8 @@
     "expo": "~54.0.25",
     "expo-camera": "~17.0.9",
     "expo-dev-client": "~6.0.20",
+    "expo-file-system": "~19.0.22",
+    "expo-image-picker": "~17.0.11",
     "expo-status-bar": "~3.0.8",
     "expo-text-recognition": "^0.1.1",
     "react": "19.1.0",
