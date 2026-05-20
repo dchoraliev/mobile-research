@@ -228,7 +228,7 @@ class QueryRequest(BaseModel):
     query: str
     ocr_text: Optional[str] = None
     image_base64: Optional[str] = None
-    k: int = 5   # number of chunks to retrieve
+    k: int = 10   # number of chunks to retrieve
 
 # Vision-capable models first — fall back to text-only if image causes an error
 MODELS = [
@@ -243,14 +243,14 @@ def call_openrouter(question: str, context: str, image_base64: Optional[str] = N
     )
 
     system_prompt = (
-        "You are a product research assistant. "
-        "Answer the user's question using ONLY the knowledge-base context documents provided below. "
-        "Use the image solely to identify the product or read values not captured by OCR — "
-        "never use the image as a substitute for knowledge-base information. "
-        "Do not use general knowledge to supplement or replace the context. "
-        "If the context does not contain a clear answer, say exactly: "
-        "'The knowledge base does not have information on this.' "
-        "Be concise and direct."
+        {"role": "system", "content": (
+        "You are a research assistant helping analyze academic papers. "
+        "Answer the user's question by synthesizing the provided context. "
+        "Draw reasonable inferences from what the documents do say. "
+        "When referencing sources, use their source filename, not their document number. "
+        "Do not refuse to answer if relevant context exists. "
+        "Never say the documents lack information if they contain anything relevant."
+)},
     )
     context_text = f"Context:\n{context}\n\nQuestion: {question}"
 
