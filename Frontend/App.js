@@ -14,11 +14,14 @@ import CameraModal from "./components/CameraModal";
 import BrowseModal from "./components/BrowseModal";
 
 // ── Active scenario — change this one line when switching scenarios ────────────
-// S1 | S2 | S3a | S3b | S4 | S5 | S6 | S7 | S10 | S11 | S12 | S15
-const SCENARIO = "S1";
+// S1 | S2 | S3a | S3b | S4 | S5 | S6 | S7 | S10 | S11
+const SCENARIO = "S2";
 
 // Set to true during scenario testing to show retrieved chunks in chat
 const SHOW_DEBUG_CHUNKS = false;
+
+// Scenarios where the raw image is sent to the LLM (BLIP / visual reasoning); others are OCR-text-only
+const SCENARIOS_WITH_IMAGE = ["S4", "S5"];
 
 export default function App() {
   const socketRef = useRef(null);
@@ -98,7 +101,7 @@ export default function App() {
   const sendTextMessage = async () => {
     const trimmed = inputText.trim();
     if (!trimmed) return;
-    const capture = pendingCapture ?? { photoUrl: null, ocrText: "", imageBase64: null };
+    const capture = pendingCapture ?? { photoUrl: null, ocrText: "", imageBase64: null, ocrMs: null };
     await sendRagQuery(trimmed, capture);
   };
 
@@ -119,12 +122,17 @@ export default function App() {
     addMessage({ type: "system", text: `Thinking... [${SCENARIO}]` });
 
     try {
+      const headers = {};
+      if (capture.ocrMs != null) headers["X-OCR-Ms"] = String(capture.ocrMs);
+
+      const sendImage = SCENARIOS_WITH_IMAGE.includes(SCENARIO);
       const res = await scenarioFetch(`${BACKEND_HTTP}/search`, {
         method: "POST",
+        headers,
         body: JSON.stringify({
           query:        userQuery,
-          ocr_text:     capture.ocrText    ?? "",
-          image_base64: capture.imageBase64 ?? null,
+          ocr_text:     capture.ocrText ?? "",
+          image_base64: sendImage ? (capture.imageBase64 ?? null) : null,
         }),
       });
 
@@ -177,10 +185,10 @@ export default function App() {
     setCameraModalVisible(true);
   };
 
-  const handlePhotoCaptured = ({ photoUrl, ocrText, imageBase64 }) => {
+  const handlePhotoCaptured = ({ photoUrl, ocrText, imageBase64, ocrMs }) => {
     setCurrentPhotoUrl(photoUrl);
     broadcastPhotoSelection(photoUrl);
-    setPendingCapture({ photoUrl, ocrText, imageBase64 });
+    setPendingCapture({ photoUrl, ocrText, imageBase64, ocrMs });
     addMessage({
       type: "system",
       text: ocrText
@@ -196,6 +204,8 @@ export default function App() {
     addMessage({ type: "system", text: "Photo selected · Running OCR..." });
 
     let ocrText = "";
+    let ocrMs = null;
+    const ocrStart = Date.now();
     try {
       const res = await scenarioFetch(`${BACKEND_HTTP}/ocr-from-stored`, {
         method: "POST",
@@ -205,9 +215,11 @@ export default function App() {
       ocrText = json.text ?? "";
     } catch (err) {
       console.log("OCR from stored failed (non-fatal):", err);
+    } finally {
+      ocrMs = Date.now() - ocrStart;
     }
 
-    setPendingCapture({ photoUrl: fullUrl, ocrText, imageBase64: null });
+    setPendingCapture({ photoUrl: fullUrl, ocrText, imageBase64: null, ocrMs });
     addMessage({
       type: "system",
       text: ocrText

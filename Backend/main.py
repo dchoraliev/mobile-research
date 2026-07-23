@@ -91,7 +91,15 @@ class MeasurementMiddleware(BaseHTTPMiddleware):
             response_body += chunk
         response_bytes = len(response_body)
 
-        ocr_ms       = getattr(request.state, "ocr_ms",       None)
+        ocr_ms = getattr(request.state, "ocr_ms", None)
+        if ocr_ms is None:
+            header_ocr_ms = request.headers.get("X-OCR-Ms")
+            if header_ocr_ms is not None:
+                try:
+                    ocr_ms = float(header_ocr_ms)
+                except ValueError:
+                    pass
+
         embedding_ms = getattr(request.state, "embedding_ms", None)
         retrieval_ms = getattr(request.state, "retrieval_ms", None)
         llm_ms       = getattr(request.state, "llm_ms",       None)
@@ -543,7 +551,7 @@ async def reset_measurements():
                         "total_bytes","end_to_end_ms","ocr_ms","embedding_ms","retrieval_ms","llm_ms"]),
         (EVAL_FILE,    ["timestamp","scenario","query","sources_returned","sources_expected",
                         "recall_at_k","answer_quality","answer_grounding","notes"]),
-        (ANSWERS_FILE, ["timestamp","scenario","query","answer","sources","result_count"]),
+        (ANSWERS_FILE, ["timestamp","scenario","query","answer","sources","k_requested","relevant_chunks"]),
     ]:
         try:
             with open(path, "w", newline="") as f:

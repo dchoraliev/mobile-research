@@ -62,8 +62,10 @@ export default function CameraModal({ visible, onClose, onPhotoCaptured, scenari
       // Step 3: OCR via backend — only if base64 was successfully read
       setStatus("Reading text...");
       let ocrText = "";
+      let ocrMs = null;
 
       if (imageBase64 && imageBase64.length > 100) {
+        const ocrStart = Date.now();
         try {
           const ocrRes = await fetch(`${BACKEND_HTTP}/ocr`, {
             method: "POST",
@@ -84,6 +86,8 @@ export default function CameraModal({ visible, onClose, onPhotoCaptured, scenari
           }
         } catch (ocrErr) {
           console.log("OCR failed (non-fatal):", ocrErr);
+        } finally {
+          ocrMs = Date.now() - ocrStart;
         }
       } else {
         console.log("Skipping OCR — imageBase64 empty or too short:", imageBase64?.length);
@@ -126,8 +130,8 @@ export default function CameraModal({ visible, onClose, onPhotoCaptured, scenari
 
       const fullUrl = `${BACKEND_HTTP}${json.url}`;
 
-      // Step 5: Return photo URL, OCR text, and base64 to App
-      onPhotoCaptured({ photoUrl: fullUrl, ocrText, imageBase64 });
+      // Step 5: Return photo URL, OCR text, base64, and OCR duration to App
+      onPhotoCaptured({ photoUrl: fullUrl, ocrText, imageBase64, ocrMs });
       onClose();
 
     } catch (err) {
