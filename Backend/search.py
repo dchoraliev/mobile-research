@@ -1,27 +1,27 @@
 """
 search.py — Semantic search using Chroma vector store + BGE-m3 embeddings.
 
-Replaces the previous NLTK keyword extraction + SQLite FTS5 approach.
 The query is embedded with BGE-m3 (runs locally, no API key needed)
 and compared against stored chunk vectors using cosine similarity.
+Embedding and retrieval are timed separately for measurement purposes.
 """
 
 import os
+import time
 from dotenv import load_dotenv
 
 load_dotenv()
 
 VECTORSTORE_DIR = "./vectorstore"
 COLLECTION_NAME = "knowledge_base"
-DEFAULT_K       = 5   # number of chunks to retrieve
+DEFAULT_K       = 10
 
-# Module-level singletons — loaded once when the server starts
 _embeddings  = None
 _vectorstore = None
 
 
 def _load_vectorstore():
-    """Load Chroma and the BGE-m3 embedding model (once per process)."""
+    """Load Chroma and BGE-m3 once per process."""
     global _embeddings, _vectorstore
 
     if _vectorstore is not None:
@@ -48,25 +48,25 @@ def _load_vectorstore():
     return _vectorstore
 
 
-def search(query: str, k: int = DEFAULT_K) -> list[dict]:
+def search(query: str, k: int = DEFAULT_K) -> tuple[list[dict], dict]:
     """
-    Perform semantic similarity search against the Chroma vector store.
+    Semantic similarity search against the Chroma vector store.
 
-    The query is embedded with BGE-m3 and compared against all stored chunk
-    vectors using cosine similarity. Returns the k most relevant chunks.
-
-    Returns list of:
-        {
-            source:        filename the chunk came from,
-            content:       the chunk text,
-            score:         cosine similarity score (higher = more relevant),
-            chunk_index:   position of the chunk in the original document,
-        }
+    Returns:
+        results: list of {source, content, score, chunk_index}
+        timings: {embedding_ms, retrieval_ms}
     """
     vs = _load_vectorstore()
 
-    # similarity_search_with_relevance_scores returns (Document, score) tuples
+    # Time embedding separately
+    t0 = time.time()
+    _embeddings.embed_query(query)
+    embedding_ms = (time.time() - t0) * 1000
+
+    # Time retrieval separately
+    t1 = time.time()
     results_with_scores = vs.similarity_search_with_relevance_scores(query, k=k)
+    retrieval_ms = (time.time() - t1) * 1000
 
     results = []
     for doc, score in results_with_scores:
@@ -78,20 +78,18 @@ def search(query: str, k: int = DEFAULT_K) -> list[dict]:
             "chunk_index": doc.metadata.get("page", 0),
         })
 
-    # Sort by score descending (most relevant first)
     results.sort(key=lambda r: r["score"], reverse=True)
-    return results
+    timings = {
+        "embedding_ms": round(embedding_ms, 2),
+        "retrieval_ms": round(retrieval_ms, 2),
+    }
+    return results, timings
 
 
 def format_context(results: list[dict]) -> str:
-    """
-    Format retrieved chunks into a context string for the LLM prompt.
-    Each chunk is wrapped in XML-style tags with its source filename,
-    following the structure recommended in the RC architecture document.
-    """
+    """Format retrieved chunks as XML-tagged context for the LLM prompt."""
     if not results:
         return ""
-
     parts = [
         f'<document id="{i}" source="{r["source"]}" score="{r["score"]}">\n{r["content"]}\n</document>'
         for i, r in enumerate(results, 1)

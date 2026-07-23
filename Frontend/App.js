@@ -13,6 +13,13 @@ import IconButton from "./components/IconButton";
 import CameraModal from "./components/CameraModal";
 import BrowseModal from "./components/BrowseModal";
 
+// ── Active scenario — change this one line when switching scenarios ────────────
+// S1 | S2 | S3a | S3b | S4 | S5 | S6 | S7 | S10 | S11 | S12 | S15
+const SCENARIO = "S1";
+
+// Set to true during scenario testing to show retrieved chunks in chat
+const SHOW_DEBUG_CHUNKS = false;
+
 export default function App() {
   const socketRef = useRef(null);
   const [messages, setMessages] = useState([]);
@@ -23,27 +30,10 @@ export default function App() {
   const [browseModalVisible, setBrowseModalVisible] = useState(false);
   const [, requestCameraPermission] = useCameraPermissions();
 
-  // Pending capture — set after a photo is taken, cleared after query
   const [pendingCapture, setPendingCapture] = useState(null);
   const [querying, setQuerying] = useState(false);
 
-  // ── Load history on mount ──
-  useEffect(() => {
-    const loadHistory = async () => {
-      try {
-        const res = await fetch(`${BACKEND_HTTP}/history`);
-        if (res.ok) {
-          const json = await res.json();
-          if (json.messages?.length) setMessages(json.messages);
-        }
-      } catch (err) {
-        console.log("Could not load history:", err);
-      }
-    };
-    loadHistory();
-  }, []);
-
-  // ── WebSocket ──
+  // ── WebSocket ──────────────────────────────────────────────────────────────
   useEffect(() => {
     const socket = new WebSocket(BACKEND_WS);
     socketRef.current = socket;
@@ -55,15 +45,11 @@ export default function App() {
         const msg = JSON.parse(event.data);
         if (msg.type === "photo_select") {
           if (msg.url) setCurrentPhotoUrl(msg.url);
-          // Skip the echo of our own photo selections — the capture/browse
-          // handlers already add an appropriate message for the local device.
-          if (msg.author !== author) {
-            addMessage({
-              type: "system",
-              text: `${msg.author ?? "Someone"} selected a new photo`,
-              timestamp: msg.timestamp,
-            });
-          }
+          addMessage({
+            type: "system",
+            text: `${msg.author ?? "Someone"} selected a new photo`,
+            timestamp: msg.timestamp,
+          });
         } else {
           setMessages((prev) => [...prev, msg]);
         }
@@ -72,14 +58,13 @@ export default function App() {
       }
     };
 
-    socket.onerror = (err) =>
-      console.log("WebSocket error:", err.message || err);
-    socket.onclose = (e) => console.log("WebSocket closed:", e.code, e.reason);
+    socket.onerror = (err) => console.log("WebSocket error:", err.message || err);
+    socket.onclose = (e)   => console.log("WebSocket closed:", e.code, e.reason);
 
     return () => socket.close();
   }, []);
 
-  // ── Helpers ──
+  // ── Helpers ────────────────────────────────────────────────────────────────
   const addMessage = (msg) =>
     setMessages((prev) => [
       ...prev,
@@ -98,16 +83,26 @@ export default function App() {
     );
   };
 
-  // ── Send message — routes to RAG query if capture is pending ──
+  // ── Shared fetch — attaches X-Scenario header to every request ────────────
+  const scenarioFetch = (url, options = {}) =>
+    fetch(url, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        "X-Scenario": SCENARIO,
+        ...(options.headers ?? {}),
+      },
+    });
+
+  // ── Send message ───────────────────────────────────────────────────────────
   const sendTextMessage = async () => {
     const trimmed = inputText.trim();
     if (!trimmed) return;
-
     const capture = pendingCapture ?? { photoUrl: null, ocrText: "", imageBase64: null };
     await sendRagQuery(trimmed, capture);
   };
 
-  // ── RAG query — search KB, show results (no LLM yet) ──
+  // ── RAG query ──────────────────────────────────────────────────────────────
   const sendRagQuery = async (userQuery, capture) => {
     setQuerying(true);
     setInputText("");
@@ -121,52 +116,47 @@ export default function App() {
       });
     }
 
-    addMessage({ type: "system", text: "Searching knowledge base..." });
+    addMessage({ type: "system", text: `Thinking... [${SCENARIO}]` });
 
     try {
-      const res = await fetch(`${BACKEND_HTTP}/search`, {
+      const res = await scenarioFetch(`${BACKEND_HTTP}/search`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          query: userQuery,
-          ocr_text: capture.ocrText ?? "",
+          query:        userQuery,
+          ocr_text:     capture.ocrText    ?? "",
           image_base64: capture.imageBase64 ?? null,
         }),
       });
 
       if (!res.ok) {
-        addMessage({
-          type: "system",
-          text: "Search failed. Check that the backend is running.",
-        });
+        addMessage({ type: "system", text: "Search failed. Check that the backend is running." });
         return;
       }
 
       const json = await res.json();
 
-      if (json.context_status === "none") {
+      // Show sources only when retrieval found something
+      if (json.context_status === "found" && json.sources?.length > 0) {
         addMessage({
           type: "system",
-          text: "No matching documents found in the knowledge base.",
+          text: `Sources: ${json.sources.join(", ")}`,
         });
-        addMessage({
-          type: "text",
-          author: "System",
-          text: "⚠️ No knowledge base results — LLM integration coming in the next phase.",
-        });
-      } else {
-        addMessage({
-          type: "system",
-          text: `Found ${json.result_count} result(s) from: ${json.sources.join(", ")}`,
-        });
+      }
 
-        if (json.answer) {
+      // Always show the answer — grounded or conversational
+      if (json.answer) {
+        addMessage({ type: "text", author: "Assistant", text: json.answer });
+      }
+
+      // Debug chunks — flip SHOW_DEBUG_CHUNKS to true during scenario testing
+      if (SHOW_DEBUG_CHUNKS && json.results?.length > 0) {
+        json.results.forEach((chunk) => {
           addMessage({
             type: "text",
-            author: "Assistant",
-            text: json.answer,
+            author: `📄 ${chunk.source} (${chunk.score})`,
+            text: chunk.content,
           });
-        }
+        });
       }
     } catch (err) {
       console.error("RAG search error:", err);
@@ -177,14 +167,11 @@ export default function App() {
     }
   };
 
-  // ── Camera ──
+  // ── Camera ─────────────────────────────────────────────────────────────────
   const openCamera = async () => {
     const permission = await requestCameraPermission();
     if (!permission.granted) {
-      Alert.alert(
-        "Permission required",
-        "Camera permission is needed to take photos.",
-      );
+      Alert.alert("Permission required", "Camera permission is needed to take photos.");
       return;
     }
     setCameraModalVisible(true);
@@ -194,7 +181,6 @@ export default function App() {
     setCurrentPhotoUrl(photoUrl);
     broadcastPhotoSelection(photoUrl);
     setPendingCapture({ photoUrl, ocrText, imageBase64 });
-
     addMessage({
       type: "system",
       text: ocrText
@@ -211,15 +197,14 @@ export default function App() {
 
     let ocrText = "";
     try {
-      const res = await fetch(`${BACKEND_HTTP}/ocr-from-stored`, {
+      const res = await scenarioFetch(`${BACKEND_HTTP}/ocr-from-stored`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ filename }),
       });
       const json = await res.json();
       ocrText = json.text ?? "";
-    } catch {
-      // OCR failure is non-fatal — proceed with empty text
+    } catch (err) {
+      console.log("OCR from stored failed (non-fatal):", err);
     }
 
     setPendingCapture({ photoUrl: fullUrl, ocrText, imageBase64: null });
@@ -269,12 +254,19 @@ export default function App() {
               onSend={sendTextMessage}
               placeholder={
                 pendingCapture
-                  ? "Ask a question about the photo..."
-                  : "Type a message..."
+                  ? `Ask a question about the photo... [${SCENARIO}]`
+                  : `Type a message... [${SCENARIO}]`
               }
               disabled={querying}
             />
           </View>
+
+          <CameraModal
+            visible={cameraModalVisible}
+            onClose={() => setCameraModalVisible(false)}
+            onPhotoCaptured={handlePhotoCaptured}
+            scenario={SCENARIO}
+          />
 
           <BrowseModal
             visible={browseModalVisible}
@@ -283,13 +275,6 @@ export default function App() {
           />
         </KeyboardAvoidingView>
       </SafeAreaView>
-
-      {/* Camera overlay rendered outside SafeAreaView so absoluteFillObject covers the full screen */}
-      <CameraModal
-        visible={cameraModalVisible}
-        onClose={() => setCameraModalVisible(false)}
-        onPhotoCaptured={handlePhotoCaptured}
-      />
     </SafeAreaProvider>
   );
 }
