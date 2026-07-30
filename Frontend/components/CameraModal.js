@@ -5,7 +5,7 @@ import * as FileSystem from "expo-file-system/legacy";
 import { cameraStyles as styles } from "../styles/camera.styles";
 import { BACKEND_HTTP } from "../config";
 
-export default function CameraModal({ visible, onClose, onPhotoCaptured, scenario = "unset" }) {
+export default function CameraModal({ visible, onClose, onPhotoCaptured, scenario = "unset", useCaption = false }) {
   const cameraRef = useRef(null);
   const [capturing, setCapturing] = useState(false);
   const [status, setStatus] = useState("");
@@ -59,15 +59,20 @@ export default function CameraModal({ visible, onClose, onPhotoCaptured, scenari
 
       console.log("imageBase64 length:", imageBase64?.length ?? "NULL");
 
-      // Step 3: OCR via backend — only if base64 was successfully read
-      setStatus("Reading text...");
+      // Step 3: OCR or BLIP caption via backend — only if base64 was successfully read.
+      // For caption scenarios, OCR is skipped entirely so it can't contribute to the answer.
+      setStatus(useCaption ? "Generating caption..." : "Reading text...");
       let ocrText = "";
       let ocrMs = null;
+      let captionText = "";
+      let captionMs = null;
 
       if (imageBase64 && imageBase64.length > 100) {
-        const ocrStart = Date.now();
+        const label = useCaption ? "Caption" : "OCR";
+        const endpoint = useCaption ? "/caption" : "/ocr";
+        const start = Date.now();
         try {
-          const ocrRes = await fetch(`${BACKEND_HTTP}/ocr`, {
+          const res = await fetch(`${BACKEND_HTTP}${endpoint}`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -76,21 +81,26 @@ export default function CameraModal({ visible, onClose, onPhotoCaptured, scenari
             body: JSON.stringify({ image_base64: imageBase64 }),
           });
 
-          if (ocrRes.ok) {
-            const ocrJson = await ocrRes.json();
-            ocrText = ocrJson.text ?? "";
-            console.log("OCR result:", ocrText || "(no text found)");
+          if (res.ok) {
+            const json = await res.json();
+            if (useCaption) {
+              captionText = json.caption ?? "";
+            } else {
+              ocrText = json.text ?? "";
+            }
+            console.log(`${label} result:`, (useCaption ? captionText : ocrText) || "(none)");
           } else {
-            const rawText = await ocrRes.text();
-            console.log("OCR server error:", ocrRes.status, rawText.slice(0, 200));
+            const rawText = await res.text();
+            console.log(`${label} server error:`, res.status, rawText.slice(0, 200));
           }
-        } catch (ocrErr) {
-          console.log("OCR failed (non-fatal):", ocrErr);
+        } catch (err) {
+          console.log(`${label} failed (non-fatal):`, err);
         } finally {
-          ocrMs = Date.now() - ocrStart;
+          if (useCaption) captionMs = Date.now() - start;
+          else ocrMs = Date.now() - start;
         }
       } else {
-        console.log("Skipping OCR — imageBase64 empty or too short:", imageBase64?.length);
+        console.log(`Skipping ${useCaption ? "captioning" : "OCR"} — imageBase64 empty or too short:`, imageBase64?.length);
       }
 
       // Step 4: Upload photo to backend
@@ -130,8 +140,8 @@ export default function CameraModal({ visible, onClose, onPhotoCaptured, scenari
 
       const fullUrl = `${BACKEND_HTTP}${json.url}`;
 
-      // Step 5: Return photo URL, OCR text, base64, and OCR duration to App
-      onPhotoCaptured({ photoUrl: fullUrl, ocrText, imageBase64, ocrMs });
+      // Step 5: Return photo URL, OCR/caption text, base64, and timings to App
+      onPhotoCaptured({ photoUrl: fullUrl, ocrText, captionText, imageBase64, ocrMs, captionMs });
       onClose();
 
     } catch (err) {
@@ -179,7 +189,9 @@ export default function CameraModal({ visible, onClose, onPhotoCaptured, scenari
             </>
           ) : (
             <Text style={styles.hint}>
-              {cameraReady ? "Tap to capture · OCR runs automatically" : "Starting camera..."}
+              {cameraReady
+                ? `Tap to capture · ${useCaption ? "BLIP caption" : "OCR"} runs automatically`
+                : "Starting camera..."}
             </Text>
           )}
           <TouchableOpacity

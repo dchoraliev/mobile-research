@@ -25,3 +25,7 @@ openai
 # OCR
 pillow
 pytesseract
+
+# BLIP image captioning (Scenario 4)
+torch
+transformers

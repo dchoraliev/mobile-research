@@ -40,6 +40,17 @@ SYSTEM_PROMPT_PHOTO = (
     "Do not refuse to answer if relevant context or a photo exists."
 )
 
+SYSTEM_PROMPT_CAPTION = (
+    "You are a research assistant. The user has attached a photo; an automatic image-captioning "
+    "model (BLIP) has generated a short caption describing what the photo shows. No OCR text is "
+    "available for this photo. Answering their question about that photo is your primary job. "
+    "Knowledge-base context is provided as supporting background — use it if it clearly relates "
+    "to the photo or question, otherwise answer using the caption and question alone. "
+    "Draw reasonable inferences from what the caption and documents do say. "
+    "When referencing sources, use their source filename, not their document number. "
+    "Do not refuse to answer if relevant context or a photo exists."
+)
+
 # ── Measurement logging ───────────────────────────────────────────────────────
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MEASUREMENTS_DIR = os.path.join(BASE_DIR, "measurements")
@@ -53,7 +64,7 @@ if not os.path.exists(LOG_FILE) or os.path.getsize(LOG_FILE) == 0:
         csv.writer(f).writerow([
             "timestamp", "scenario", "endpoint",
             "request_bytes", "response_bytes", "total_bytes",
-            "end_to_end_ms", "ocr_ms", "embedding_ms",
+            "end_to_end_ms", "ocr_ms", "caption_ms", "embedding_ms",
             "retrieval_ms", "llm_ms"
         ])
 
@@ -100,6 +111,15 @@ class MeasurementMiddleware(BaseHTTPMiddleware):
                 except ValueError:
                     pass
 
+        caption_ms = getattr(request.state, "caption_ms", None)
+        if caption_ms is None:
+            header_caption_ms = request.headers.get("X-Caption-Ms")
+            if header_caption_ms is not None:
+                try:
+                    caption_ms = float(header_caption_ms)
+                except ValueError:
+                    pass
+
         embedding_ms = getattr(request.state, "embedding_ms", None)
         retrieval_ms = getattr(request.state, "retrieval_ms", None)
         llm_ms       = getattr(request.state, "llm_ms",       None)
@@ -116,6 +136,7 @@ class MeasurementMiddleware(BaseHTTPMiddleware):
                     request_bytes + response_bytes,
                     round(end_to_end_ms, 2),
                     round(ocr_ms,       2) if ocr_ms       else "",
+                    round(caption_ms,   2) if caption_ms   else "",
                     round(embedding_ms, 2) if embedding_ms else "",
                     round(retrieval_ms, 2) if retrieval_ms else "",
                     round(llm_ms,       2) if llm_ms       else "",
@@ -160,6 +181,12 @@ async def startup_event():
         print("WARNING: Vector store not found — run ingest.py first.")
     except Exception as e:
         print(f"WARNING: Could not load vector store: {e}")
+
+    try:
+        _load_blip()
+        print("BLIP captioning model ready.")
+    except Exception as e:
+        print(f"WARNING: Could not load BLIP model: {e}")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -312,6 +339,75 @@ async def ocr_image(req: OCRRequest, request: Request):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+#   BLIP image captioning (Scenario 4 — caption replaces OCR as photo context)
+# ══════════════════════════════════════════════════════════════════════════════
+_blip_processor = None
+_blip_model = None
+
+def _load_blip():
+    """Load the BLIP captioning model once per process."""
+    global _blip_processor, _blip_model
+    if _blip_model is not None:
+        return _blip_processor, _blip_model
+
+    from transformers import BlipProcessor, BlipForConditionalGeneration
+
+    _blip_processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
+    _blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base")
+    return _blip_processor, _blip_model
+
+def _generate_caption(image) -> str:
+    processor, model = _load_blip()
+    inputs = processor(image.convert("RGB"), return_tensors="pt")
+    out = model.generate(**inputs, max_new_tokens=40)
+    return processor.decode(out[0], skip_special_tokens=True).strip()
+
+class CaptionRequest(BaseModel):
+    image_base64: str
+
+class CaptionFromStoredRequest(BaseModel):
+    filename: str
+
+@app.post("/caption")
+async def caption_image(req: CaptionRequest, request: Request):
+    """Server-side image captioning using BLIP."""
+    try:
+        if not req.image_base64 or len(req.image_base64) < 100:
+            return {"caption": "", "error": "Empty or invalid base64 image"}
+
+        t0 = time.time()
+        from PIL import Image
+        import base64
+        import io
+
+        image_data = base64.b64decode(req.image_base64)
+        image = Image.open(io.BytesIO(image_data))
+        caption = _generate_caption(image)
+        request.state.caption_ms = (time.time() - t0) * 1000
+        return {"caption": caption}
+    except Exception as e:
+        print(f"BLIP captioning error: {e}")
+        return {"caption": "", "error": str(e)}
+
+@app.post("/caption-from-stored")
+async def caption_from_stored(req: CaptionFromStoredRequest, request: Request):
+    try:
+        from PIL import Image
+        file_path = os.path.join(UPLOAD_DIR, req.filename)
+        if not os.path.isfile(file_path):
+            return {"caption": "", "error": "File not found"}
+
+        t0 = time.time()
+        image = Image.open(file_path)
+        caption = _generate_caption(image)
+        request.state.caption_ms = (time.time() - t0) * 1000
+        return {"caption": caption}
+    except Exception as e:
+        print(f"BLIP captioning error: {e}")
+        return {"caption": "", "error": str(e)}
+
+
+# ══════════════════════════════════════════════════════════════════════════════
 #   LLM
 # ══════════════════════════════════════════════════════════════════════════════
 MODELS = [
@@ -340,16 +436,29 @@ def is_conversational(query: str) -> bool:
         return True
     return False
 
-def call_openrouter(question: str, context: str, image_base64: Optional[str] = None, ocr_text: Optional[str] = None) -> str:
+def call_openrouter(
+    question: str,
+    context: str,
+    image_base64: Optional[str] = None,
+    ocr_text: Optional[str] = None,
+    caption_text: Optional[str] = None,
+) -> str:
     client = OpenAI(
         base_url="https://openrouter.ai/api/v1",
         api_key=os.getenv("OPENROUTER_API_KEY"),
     )
 
-    has_photo = bool(image_base64 or ocr_text)
-    system_content = SYSTEM_PROMPT_PHOTO if has_photo else SYSTEM_PROMPT_RESEARCH
+    has_photo = bool(image_base64 or ocr_text or caption_text)
+    if caption_text:
+        system_content = SYSTEM_PROMPT_CAPTION
+    elif has_photo:
+        system_content = SYSTEM_PROMPT_PHOTO
+    else:
+        system_content = SYSTEM_PROMPT_RESEARCH
 
     parts = []
+    if caption_text:
+        parts.append(f"Auto-generated caption of the photo (BLIP):\n{caption_text}")
     if ocr_text:
         parts.append(f"Text extracted from the photo (OCR):\n{ocr_text}")
     if context:
@@ -413,6 +522,7 @@ def call_openrouter_conversational(question: str) -> str:
 class QueryRequest(BaseModel):
     query: str
     ocr_text: Optional[str] = None
+    caption_text: Optional[str] = None
     image_base64: Optional[str] = None
     k: int = 10
 
@@ -429,8 +539,8 @@ async def query_knowledge_base(req: QueryRequest, request: Request):
       7. Log answer automatically to answers.csv
       8. Return answer, sources, retrieved chunks, and timings
     """
-    combined_query = " ".join(filter(None, [req.query, req.ocr_text]))
-    has_attachment = bool(req.ocr_text or req.image_base64)
+    combined_query = " ".join(filter(None, [req.query, req.ocr_text, req.caption_text]))
+    has_attachment = bool(req.ocr_text or req.caption_text or req.image_base64)
     scenario = request.headers.get("X-Scenario", "unset")
 
     # Skip retrieval for conversational queries
@@ -441,6 +551,7 @@ async def query_knowledge_base(req: QueryRequest, request: Request):
         return {
             "query":          req.query,
             "ocr_text":       req.ocr_text,
+            "caption_text":   req.caption_text,
             "context_status": "conversational",
             "result_count":   0,
             "results":        [],
@@ -467,6 +578,7 @@ async def query_knowledge_base(req: QueryRequest, request: Request):
             context=context,
             image_base64=req.image_base64 or None,
             ocr_text=req.ocr_text or None,
+            caption_text=req.caption_text or None,
         )
     else:
         llm_answer = call_openrouter_conversational(question=req.query)
@@ -490,6 +602,7 @@ async def query_knowledge_base(req: QueryRequest, request: Request):
     return {
         "query":          req.query,
         "ocr_text":       req.ocr_text,
+        "caption_text":   req.caption_text,
         "context_status": context_status,
         "result_count":   len(relevant_results),
         "results":        relevant_results,
@@ -548,7 +661,7 @@ async def reset_measurements():
     """Clear all logs. Call before starting a new scenario run."""
     for path, headers in [
         (LOG_FILE,     ["timestamp","scenario","endpoint","request_bytes","response_bytes",
-                        "total_bytes","end_to_end_ms","ocr_ms","embedding_ms","retrieval_ms","llm_ms"]),
+                        "total_bytes","end_to_end_ms","ocr_ms","caption_ms","embedding_ms","retrieval_ms","llm_ms"]),
         (EVAL_FILE,    ["timestamp","scenario","query","sources_returned","sources_expected",
                         "recall_at_k","answer_quality","answer_grounding","notes"]),
         (ANSWERS_FILE, ["timestamp","scenario","query","answer","sources","k_requested","relevant_chunks"]),
