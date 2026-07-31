@@ -15,7 +15,7 @@ import BrowseModal from "./components/BrowseModal";
 
 // ── Active scenario — change this one line when switching scenarios ────────────
 // S1 | S2 | S3a | S3b | S4 | S5 | S6 | S7 | S10 | S11 | S12 | S15
-const SCENARIO = "S1";
+const SCENARIO = "S6";
 
 // Set to true during scenario testing to show retrieved chunks in chat
 const SHOW_DEBUG_CHUNKS = false;

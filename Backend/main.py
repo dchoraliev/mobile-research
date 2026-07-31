@@ -40,6 +40,15 @@ SYSTEM_PROMPT_PHOTO = (
     "Do not refuse to answer if relevant context or a photo exists."
 )
 
+SYSTEM_PROMPT_STRICT = (
+    "You are a research assistant helping analyze academic papers. "
+    "Answer the user's question using only information explicitly stated in the provided context. "
+    "Do not draw inferences or make connections beyond what the documents directly say. "
+    "If the context does not contain sufficient information to answer the question, "
+    "state clearly that the documents do not provide enough information on this topic. "
+    "When referencing sources, use their source filename, not their document number."
+)
+
 # ── Measurement logging ───────────────────────────────────────────────────────
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MEASUREMENTS_DIR = os.path.join(BASE_DIR, "measurements")
@@ -332,14 +341,25 @@ def is_conversational(query: str) -> bool:
         return True
     return False
 
-def call_openrouter(question: str, context: str, image_base64: Optional[str] = None, ocr_text: Optional[str] = None) -> str:
+def call_openrouter(
+    question: str,
+    context: str,
+    image_base64: Optional[str] = None,
+    ocr_text: Optional[str] = None,
+    strict: bool = False,
+) -> str:
     client = OpenAI(
         base_url="https://openrouter.ai/api/v1",
         api_key=os.getenv("OPENROUTER_API_KEY"),
     )
 
     has_photo = bool(image_base64 or ocr_text)
-    system_content = SYSTEM_PROMPT_PHOTO if has_photo else SYSTEM_PROMPT_RESEARCH
+    if strict:
+        system_content = SYSTEM_PROMPT_STRICT
+    elif has_photo:
+        system_content = SYSTEM_PROMPT_PHOTO
+    else:
+        system_content = SYSTEM_PROMPT_RESEARCH
 
     parts = []
     if ocr_text:
@@ -424,6 +444,7 @@ async def query_knowledge_base(req: QueryRequest, request: Request):
     combined_query = " ".join(filter(None, [req.query, req.ocr_text]))
     has_attachment = bool(req.ocr_text or req.image_base64)
     scenario = request.headers.get("X-Scenario", "unset")
+    strict = scenario == "S6"
 
     # Skip retrieval for conversational queries
     if is_conversational(combined_query) and not has_attachment:
@@ -459,6 +480,7 @@ async def query_knowledge_base(req: QueryRequest, request: Request):
             context=context,
             image_base64=req.image_base64 or None,
             ocr_text=req.ocr_text or None,
+            strict=strict,
         )
     else:
         llm_answer = call_openrouter_conversational(question=req.query)
