@@ -51,6 +51,19 @@ SYSTEM_PROMPT_CAPTION = (
     "Do not refuse to answer if relevant context or a photo exists."
 )
 
+SYSTEM_PROMPT_OCR_CAPTION = (
+    "You are a research assistant. The user has attached a photo; text has been extracted from it "
+    "via OCR and an automatic image-captioning model (BLIP) has generated a short caption describing "
+    "what the photo shows. Answering their question about that photo is your primary job. Use the "
+    "OCR text and the caption together — the OCR text gives you literal text present in the photo, "
+    "the caption gives you a description of the scene. "
+    "Knowledge-base context is provided as supporting background — use it if it clearly relates "
+    "to the photo or question, otherwise answer using the OCR text and caption alone. "
+    "Draw reasonable inferences from what the OCR text, caption, and documents do say. "
+    "When referencing sources, use their source filename, not their document number. "
+    "Do not refuse to answer if relevant context or a photo exists."
+)
+
 # ── Measurement logging ───────────────────────────────────────────────────────
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MEASUREMENTS_DIR = os.path.join(BASE_DIR, "measurements")
@@ -449,7 +462,9 @@ def call_openrouter(
     )
 
     has_photo = bool(image_base64 or ocr_text or caption_text)
-    if caption_text:
+    if ocr_text and caption_text:
+        system_content = SYSTEM_PROMPT_OCR_CAPTION
+    elif caption_text:
         system_content = SYSTEM_PROMPT_CAPTION
     elif has_photo:
         system_content = SYSTEM_PROMPT_PHOTO

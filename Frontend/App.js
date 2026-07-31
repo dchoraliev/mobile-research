@@ -12,7 +12,14 @@ import ChatInput from "./components/ChatInput";
 import IconButton from "./components/IconButton";
 import CameraModal from "./components/CameraModal";
 import BrowseModal from "./components/BrowseModal";
-import { SCENARIO, SHOW_DEBUG_CHUNKS, SCENARIOS_WITH_IMAGE, SCENARIOS_WITH_CAPTION } from "./scenarios";
+import { SCENARIO, SHOW_DEBUG_CHUNKS, SCENARIOS_WITH_IMAGE, SCENARIOS_WITH_CAPTION, SCENARIOS_WITH_OCR_AND_CAPTION } from "./scenarios";
+
+// "ocr" | "caption" | "both" — which text-extraction endpoints this scenario uses
+const CAMERA_MODE = SCENARIOS_WITH_OCR_AND_CAPTION.includes(SCENARIO)
+  ? "both"
+  : SCENARIOS_WITH_CAPTION.includes(SCENARIO)
+    ? "caption"
+    : "ocr";
 
 export default function App() {
   const socketRef = useRef(null);
@@ -191,13 +198,14 @@ export default function App() {
     setCurrentPhotoUrl(photoUrl);
     broadcastPhotoSelection(photoUrl);
     setPendingCapture({ photoUrl, ocrText, captionText, imageBase64, ocrMs, captionMs });
+    const parts = [];
+    if (ocrText) parts.push(`OCR found text (${ocrText.length} chars)`);
+    if (captionText) parts.push(`Caption (BLIP): "${captionText}"`);
     addMessage({
       type: "system",
-      text: captionText
-        ? `Photo captured · Caption (BLIP): "${captionText}" · Type your question`
-        : ocrText
-          ? `Photo captured · OCR found text (${ocrText.length} chars) · Type your question`
-          : "Photo captured · No text detected · Type your question to search the knowledge base",
+      text: parts.length
+        ? `Photo captured · ${parts.join(" · ")} · Type your question`
+        : "Photo captured · No text detected · Type your question to search the knowledge base",
     });
   };
 
@@ -205,43 +213,60 @@ export default function App() {
     setCurrentPhotoUrl(fullUrl);
     broadcastPhotoSelection(fullUrl);
 
-    const useCaption = SCENARIOS_WITH_CAPTION.includes(SCENARIO);
+    const runOcr = CAMERA_MODE === "ocr" || CAMERA_MODE === "both";
+    const runCaption = CAMERA_MODE === "caption" || CAMERA_MODE === "both";
     addMessage({
       type: "system",
-      text: useCaption ? "Photo selected · Generating caption (BLIP)..." : "Photo selected · Running OCR...",
+      text: runOcr && runCaption
+        ? "Photo selected · Running OCR + generating caption (BLIP)..."
+        : runCaption
+          ? "Photo selected · Generating caption (BLIP)..."
+          : "Photo selected · Running OCR...",
     });
 
     let ocrText = "";
     let captionText = "";
     let ocrMs = null;
     let captionMs = null;
-    const start = Date.now();
-    try {
-      const endpoint = useCaption ? "/caption-from-stored" : "/ocr-from-stored";
-      const res = await scenarioFetch(`${BACKEND_HTTP}${endpoint}`, {
-        method: "POST",
-        body: JSON.stringify({ filename }),
-      });
-      const json = await res.json();
-      if (useCaption) captionText = json.caption ?? "";
-      else ocrText = json.text ?? "";
-    } catch (err) {
-      console.log(`${useCaption ? "Caption" : "OCR"} from stored failed (non-fatal):`, err);
-    } finally {
-      if (useCaption) captionMs = Date.now() - start;
-      else ocrMs = Date.now() - start;
+
+    const fetchFromStored = async (endpoint) => {
+      const start = Date.now();
+      try {
+        const res = await scenarioFetch(`${BACKEND_HTTP}${endpoint}`, {
+          method: "POST",
+          body: JSON.stringify({ filename }),
+        });
+        const json = await res.json();
+        return { json, ms: Date.now() - start };
+      } catch (err) {
+        console.log(`${endpoint} failed (non-fatal):`, err);
+        return { json: {}, ms: Date.now() - start };
+      }
+    };
+
+    const tasks = [];
+    if (runOcr) {
+      tasks.push(fetchFromStored("/ocr-from-stored").then(({ json, ms }) => {
+        ocrText = json.text ?? "";
+        ocrMs = ms;
+      }));
     }
+    if (runCaption) {
+      tasks.push(fetchFromStored("/caption-from-stored").then(({ json, ms }) => {
+        captionText = json.caption ?? "";
+        captionMs = ms;
+      }));
+    }
+    await Promise.all(tasks);
 
     setPendingCapture({ photoUrl: fullUrl, ocrText, captionText, imageBase64: null, ocrMs, captionMs });
+
+    const parts = [];
+    if (runOcr) parts.push(ocrText ? `OCR found text (${ocrText.length} chars)` : "No OCR text detected");
+    if (runCaption) parts.push(captionText ? `Caption (BLIP): "${captionText}"` : "No caption generated");
     addMessage({
       type: "system",
-      text: useCaption
-        ? (captionText
-            ? `Caption (BLIP): "${captionText}" · Type your question`
-            : "No caption generated · Type your question to search the knowledge base")
-        : (ocrText
-            ? `OCR found text (${ocrText.length} chars) · Type your question`
-            : "No text detected · Type your question to search the knowledge base"),
+      text: `${parts.join(" · ")} · Type your question`,
     });
   };
 
@@ -295,7 +320,7 @@ export default function App() {
             onClose={() => setCameraModalVisible(false)}
             onPhotoCaptured={handlePhotoCaptured}
             scenario={SCENARIO}
-            useCaption={SCENARIOS_WITH_CAPTION.includes(SCENARIO)}
+            mode={CAMERA_MODE}
           />
 
           <BrowseModal

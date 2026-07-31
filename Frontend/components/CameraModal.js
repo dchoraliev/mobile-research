@@ -5,7 +5,9 @@ import * as FileSystem from "expo-file-system/legacy";
 import { cameraStyles as styles } from "../styles/camera.styles";
 import { BACKEND_HTTP } from "../config";
 
-export default function CameraModal({ visible, onClose, onPhotoCaptured, scenario = "unset", useCaption = false }) {
+export default function CameraModal({ visible, onClose, onPhotoCaptured, scenario = "unset", mode = "ocr" }) {
+  const runOcr = mode === "ocr" || mode === "both";
+  const runCaption = mode === "caption" || mode === "both";
   const cameraRef = useRef(null);
   const [capturing, setCapturing] = useState(false);
   const [status, setStatus] = useState("");
@@ -59,17 +61,14 @@ export default function CameraModal({ visible, onClose, onPhotoCaptured, scenari
 
       console.log("imageBase64 length:", imageBase64?.length ?? "NULL");
 
-      // Step 3: OCR or BLIP caption via backend — only if base64 was successfully read.
-      // For caption scenarios, OCR is skipped entirely so it can't contribute to the answer.
-      setStatus(useCaption ? "Generating caption..." : "Reading text...");
+      // Step 3: OCR and/or BLIP caption via backend — only if base64 was successfully read.
+      setStatus(runOcr && runCaption ? "Reading text & generating caption..." : runCaption ? "Generating caption..." : "Reading text...");
       let ocrText = "";
       let ocrMs = null;
       let captionText = "";
       let captionMs = null;
 
-      if (imageBase64 && imageBase64.length > 100) {
-        const label = useCaption ? "Caption" : "OCR";
-        const endpoint = useCaption ? "/caption" : "/ocr";
+      const runExtraction = async (label, endpoint) => {
         const start = Date.now();
         try {
           const res = await fetch(`${BACKEND_HTTP}${endpoint}`, {
@@ -83,24 +82,31 @@ export default function CameraModal({ visible, onClose, onPhotoCaptured, scenari
 
           if (res.ok) {
             const json = await res.json();
-            if (useCaption) {
-              captionText = json.caption ?? "";
-            } else {
-              ocrText = json.text ?? "";
-            }
-            console.log(`${label} result:`, (useCaption ? captionText : ocrText) || "(none)");
+            const result = label === "Caption" ? (json.caption ?? "") : (json.text ?? "");
+            console.log(`${label} result:`, result || "(none)");
+            return { result, ms: Date.now() - start };
           } else {
             const rawText = await res.text();
             console.log(`${label} server error:`, res.status, rawText.slice(0, 200));
+            return { result: "", ms: Date.now() - start };
           }
         } catch (err) {
           console.log(`${label} failed (non-fatal):`, err);
-        } finally {
-          if (useCaption) captionMs = Date.now() - start;
-          else ocrMs = Date.now() - start;
+          return { result: "", ms: Date.now() - start };
         }
+      };
+
+      if (imageBase64 && imageBase64.length > 100) {
+        const tasks = [];
+        if (runOcr) {
+          tasks.push(runExtraction("OCR", "/ocr").then(({ result, ms }) => { ocrText = result; ocrMs = ms; }));
+        }
+        if (runCaption) {
+          tasks.push(runExtraction("Caption", "/caption").then(({ result, ms }) => { captionText = result; captionMs = ms; }));
+        }
+        await Promise.all(tasks);
       } else {
-        console.log(`Skipping ${useCaption ? "captioning" : "OCR"} — imageBase64 empty or too short:`, imageBase64?.length);
+        console.log("Skipping OCR/captioning — imageBase64 empty or too short:", imageBase64?.length);
       }
 
       // Step 4: Upload photo to backend
@@ -190,7 +196,7 @@ export default function CameraModal({ visible, onClose, onPhotoCaptured, scenari
           ) : (
             <Text style={styles.hint}>
               {cameraReady
-                ? `Tap to capture · ${useCaption ? "BLIP caption" : "OCR"} runs automatically`
+                ? `Tap to capture · ${runOcr && runCaption ? "OCR + BLIP caption" : runCaption ? "BLIP caption" : "OCR"} runs automatically`
                 : "Starting camera..."}
             </Text>
           )}
