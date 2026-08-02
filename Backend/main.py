@@ -426,7 +426,7 @@ class QueryRequest(BaseModel):
     query: str
     ocr_text: Optional[str] = None
     image_base64: Optional[str] = None
-    k: int = 5
+    k: int = 20
 
 @app.post("/query")
 async def query_knowledge_base(req: QueryRequest, request: Request):
