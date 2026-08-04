@@ -15,7 +15,7 @@ import BrowseModal from "./components/BrowseModal";
 
 // ── Active scenario — change this one line when switching scenarios ────────────
 // S1 | S2 | S3a | S3b | S4 | S5 | S6 | S7 | S10 | S11 | S12 | S15
-const SCENARIO = "S1";
+const SCENARIO = "S10";
 
 // Set to true during scenario testing to show retrieved chunks in chat
 const SHOW_DEBUG_CHUNKS = false;
@@ -118,15 +118,24 @@ export default function App() {
 
     addMessage({ type: "system", text: `Thinking... [${SCENARIO}]` });
 
+    const isCloudOnly = SCENARIO === "S10";
+
     try {
-      const res = await scenarioFetch(`${BACKEND_HTTP}/search`, {
-        method: "POST",
-        body: JSON.stringify({
-          query:        userQuery,
-          ocr_text:     capture.ocrText    ?? "",
-          image_base64: capture.imageBase64 ?? null,
-        }),
-      });
+      const res = await scenarioFetch(
+        `${BACKEND_HTTP}${isCloudOnly ? "/cloud-query" : "/search"}`,
+        {
+          method: "POST",
+          body: JSON.stringify(
+            isCloudOnly
+              ? { query: userQuery }
+              : {
+                  query:        userQuery,
+                  ocr_text:     capture.ocrText    ?? "",
+                  image_base64: capture.imageBase64 ?? null,
+                },
+          ),
+        },
+      );
 
       if (!res.ok) {
         addMessage({ type: "system", text: "Search failed. Check that the backend is running." });

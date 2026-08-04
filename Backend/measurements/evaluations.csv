@@ -1,4 +1,5 @@
 timestamp,scenario,query,answer,sources_returned,sources_expected,recall_at_k,answer_quality (1 = Refusal or no answer  |  2 = Incorrect / hallucinated  |  3 = Partially correct  |  4 = Fully grounded and accurate),answer_grounding (Grounded | Partial | Refusal | Hallucination),notes
+imestamp,scenario,query,answer,sources,,N/A,,,
 2026-07-17T12:13:47,S1,How do different generations perceive integration between agricultural paradigms and their connections with the food system?,"While the provided documents do not directly compare perceptions of different generations on the integration of agricultural paradigms and their connections with the food system, they offer insights into Generation Z's perceptions of the farming profession.
 
 Specifically, the ""Artikel Ratna dkk 2025 (final author) (CE).pdf"" provides a case study of Generation Z's perception of the farming profession among Faculty of Agriculture students. This study reveals a generally negative perception (average 2.56, categorized as ""Disagree"") toward the farming profession among these students. This negative perception is particularly tied to aspects such as welfare (average 2.28 - Disagree), convenience (average 2.04 - Disagree), and social prestige (average 2.19 - Disagree) (Artikel Ratna dkk 2025 (final author) (CE).pdf).
@@ -7,7 +8,7 @@ However, these Generation Z students do recognize the strategic role of farming 
 
 The documents also indicate that the negative perception of the younger generation toward farming has the potential to threaten the sustainability of the national agricultural sector (""Artikel Ratna dkk 2025 (final author) (CE).pdf""). This aligns with a broader concern about a decline in the workforce employed in agriculture since 2014 (""Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf""). The ""Artikel Ratna dkk 2025 (final author) (CE).pdf"" further suggests that Generation Z, with its affinity for technology and multitasking, tends to prefer different types of work and may perceive risks and complications in agricultural business.
 
-""1-s2.0-S0950329325003283-main.pdf"" highlights the importance of understanding Gen Z's attitudes and dietary habits towards plant-based meals to enhance product development and marketing strategies, which can connect to the food system. However, this document focuses on consumption rather than their perception of agricultural paradigms or the farming profession directly.",1-s2.0-S0950329325003283-main.pdf|Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf|1-s2.0-S0950329325003283-main.pdf,1,3,Partial,"Answers only about Gen Z, not multiple generations. Correctly cites specific scores (2.56, 2.28, 2.04, 2.19) and food security score (3.75) but acknowledges the question is only partially addressed"
+""1-s2.0-S0950329325003283-main.pdf"" highlights the importance of understanding Gen Z's attitudes and dietary habits towards plant-based meals to enhance product development and marketing strategies, which can connect to the food system. However, this document focuses on consumption rather than their perception of agricultural paradigms or the farming profession directly.",1-s2.0-S0950329325003283-main.pdf|Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf|1-s2.0-S0950329325003283-main.pdf,1,,,
 2026-07-17T12:14:30,S1,What are the generational challenges and differences in understanding agricultural paradigms and food systems ?,"The younger generation, particularly Generation Z, has a low interest in the farming profession, which poses a significant challenge to farmer regeneration and the sustainability of the agricultural sector. This lack of interest is influenced by several factors:
 
 *   **Negative Perceptions:** Young people view farming as hard work that lacks the promise of a good livelihood, is complicated, difficult, and high-risk (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf). They also perceive the profession as less prestigious compared to formal and industrial sectors (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).
@@ -15,8 +16,8 @@ The documents also indicate that the negative perception of the younger generati
 *   **Declining Participation:** This negative perception leads to a decline in the interest of young workers in agriculture, impacting the goal of sustainable agriculture (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).
 *   **Technological Gap:** While technological advancements require a young generation capable of quick agricultural innovations, there has been a decline in the agricultural workforce since 2014 (Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf).
 
-These challenges threaten the sustainability of the national agricultural sector by hindering farmer regeneration and potentially impacting agricultural productivity and food security (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).",Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,1,4,Grounded,"Well-structured, covers negative perceptions, work preferences, declining participation, workforce decline since 2014. Fully supported by both sources"
-2026-07-17T12:20:15,S1,What is the overall mean perception score of farming as a profession among agriculture students?,"The overall mean perception score of farming as a profession among agriculture students is 2.56. This score falls into the ""Disagree"" category (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).",Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf,1,4,Grounded,"Exact factual answer: 2.56, ""Disagree"" category. Single source, precise retrieval"
+These challenges threaten the sustainability of the national agricultural sector by hindering farmer regeneration and potentially impacting agricultural productivity and food security (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).",Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,1,,,
+2026-07-17T12:20:15,S1,What is the overall mean perception score of farming as a profession among agriculture students?,"The overall mean perception score of farming as a profession among agriculture students is 2.56. This score falls into the ""Disagree"" category (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).",Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf,1,,,
 2026-07-17T12:22:44,S1,What factors predict willingness to pay for plant-based milk alternatives among Italian Gen Z consumers?,"Factors predicting willingness to pay (WTP) for plant-based milk analogues (PBMA) among Italian Gen Z consumers include:
 
 *   **Convenience:** Purchase convenience, defined by ease of purchasing and integrating PBMA into daily diets, positively impacts Italian Gen Z consumersï¿½ WTP for PBMA (1-s2.0-S0950329325003283-main.pdf).
@@ -25,11 +26,11 @@ These challenges threaten the sustainability of the national agricultural sector
 *   **Dietary Patterns (Omnivorous):** Contrary to expectations, Italian Gen Z omnivores are more open to PBMA due to flexible diets and a desire for variety, which impacts their WTP. This means that an omnivorous diet pattern does *not* negatively impact WTP for PBMA (1-s2.0-S0950329325003283-main.pdf).
 *   **Price:** Price negatively impacts Italian Gen Z consumersï¿½ WTP for PBMA (1-s2.0-S0950329325003283-main.pdf).
 
-The study, grounded in the Food Choice Questionnaire (FCQ) and using a contingent valuation framework, specifically aimed to uncover the motivations behind Italian Gen Z's WTP for PBMA (1-s2.0-S0950329325003283-main.pdf).",1-s2.0-S0950329325003283-main.pdf,1-s2.0-S0950329325003283-main.pdf,1,4,Grounded,"Comprehensive: convenience, healthiness, weight control, omnivorous diet, price. All supported by Rivaroli paper"
-2026-07-17T12:23:52,S1,What is the mean score for farming convenience as perceived by Gen Z students in the study?,"The mean score for farming convenience, as perceived by Gen Z students in the study, is 2.04. This falls into the ""Disagree"" category, meaning students do not consider farming to be an easy job (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).",Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf,1,4,Grounded,"Exact factual answer: 2.04, ""Disagree"". Precise single-source retrieval"
+The study, grounded in the Food Choice Questionnaire (FCQ) and using a contingent valuation framework, specifically aimed to uncover the motivations behind Italian Gen Z's WTP for PBMA (1-s2.0-S0950329325003283-main.pdf).",1-s2.0-S0950329325003283-main.pdf,1-s2.0-S0950329325003283-main.pdf,1,,,
+2026-07-17T12:23:52,S1,What is the mean score for farming convenience as perceived by Gen Z students in the study?,"The mean score for farming convenience, as perceived by Gen Z students in the study, is 2.04. This falls into the ""Disagree"" category, meaning students do not consider farming to be an easy job (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).",Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf,1,,,
 2026-07-17T12:24:44,S1,What entrepreneurial factors motivate Indonesian millennials to consider careers in the agricultural sector?,"Several factors motivate Indonesian millennials to consider careers in the agricultural sector, including perceived behavioral control and attitude towards behavior (Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf). These factors positively influence millennials' intentions to become agripreneurs. The agricultural sector also offers promising future prospects for increasing employment opportunities, which is a significant draw for many respondents (Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf).
 
-The study highlights the importance of providing more opportunities and capacities for the younger generation to boost their entrepreneurial motivation in this sector (Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf). The research investigates attitudes and circumstances that can encourage young people to start their own agricultural businesses (Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf).",Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,1,4,Grounded,"Correctly identifies TPB factors (perceived behavioural control, attitude), future prospects from Suwanan. Ratna retrieved but not misused"
+The study highlights the importance of providing more opportunities and capacities for the younger generation to boost their entrepreneurial motivation in this sector (Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf). The research investigates attitudes and circumstances that can encourage young people to start their own agricultural businesses (Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf).",Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,1,,,
 2026-07-17T12:26:43,S1,How do different generations perceive farming as a career and what factors drive their attitudes?,"Generation Z generally holds a negative perception of farming as a career, viewing it as less prestigious compared to careers in formal and industrial sectors (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf). They tend to disagree that farming offers a better or easy life, and perceive it as involving hard work, high risk, and lacking promising livelihoods (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf). This generation, characterized by quick adaptation to technology and a preference for multitasking, leans away from agricultural work (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf). While they recognize farming's importance for food security, its social image is not seen as prestigious (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).
 
 Factors influencing Generation Z's interest in farming include:
@@ -37,11 +38,11 @@ Factors influencing Generation Z's interest in farming include:
 *   **Family Environment:** A significant factor, with a positive effect. Growing up in a farming family tends to foster a positive perception and greater interest in continuing the profession (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf). This aligns with Ayuni and Awaludin's (2025) findings on the strong role of the farming environment and family support (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).
 *   **Gender and Land Ownership:** Gender is an insignificant factor, while land ownership has a significant positive effect on interest (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).
 
-The overall perception among agriculture faculty students, as a proxy for Generation Z, is negative regarding welfare, convenience, and social prestige associated with farming (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf). This low perception potentially reduces interest in agricultural careers, highlighting the need to improve the profession's image for the sustainability of the national agricultural sector (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).",Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,0.5,3,Partial,"Detailed on Gen Z from Ratna (parental occupation, family environment, land ownership) but missed Suwanan entirely — no millennial angle, no generational comparison"
+The overall perception among agriculture faculty students, as a proxy for Generation Z, is negative regarding welfare, convenience, and social prestige associated with farming (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf). This low perception potentially reduces interest in agricultural careers, highlighting the need to improve the profession's image for the sustainability of the national agricultural sector (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).",Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,0.5,,,
 2026-07-17T12:28:37,S1,What eating behavior clusters were identified among Greek university students?,"The study identified two distinct eating behavior profiles among Greek university students:
 
 1.  **""Hedonic Explorers""**: This profile was characterized by higher enjoyment of food, openness to novelty, and stronger responsiveness to external sensory cues (nutrients-18-00758.pdf). They exhibit hedonic-exploratory eating tendencies (nutrients-18-00758.pdf).
-2.  **""Emo""** (likely ""Emotional Eaters"" or ""Emotionally Driven"") This profile is only partially mentioned as ""Emo-"" in the provided text (nutrients-18-00758.pdf). However, based on the descriptions in the documents, particularly the mention of ""emotional, sensory, and regulatory eating drivers"" (nutrients-18-00758.pdf) and the contrast with ""Hedonic Explorers,"" it can be inferred that this profile likely represents individuals whose eating is influenced by emotional factors. Another document mentions ""emotional regulation and satiety responsiveness"" in relation to eating tendencies, which would fit this implied profile (nutrients-18-00758.pdf).",nutrients-18-00758.pdf,nutrients-18-00758.pdf,1,3,Partial,"First cluster (Hedonic Explorers) well described. Second cluster only partially recovered from text — model admits uncertainty about ""Emo-"" label"
+2.  **""Emo""** (likely ""Emotional Eaters"" or ""Emotionally Driven"") This profile is only partially mentioned as ""Emo-"" in the provided text (nutrients-18-00758.pdf). However, based on the descriptions in the documents, particularly the mention of ""emotional, sensory, and regulatory eating drivers"" (nutrients-18-00758.pdf) and the contrast with ""Hedonic Explorers,"" it can be inferred that this profile likely represents individuals whose eating is influenced by emotional factors. Another document mentions ""emotional regulation and satiety responsiveness"" in relation to eating tendencies, which would fit this implied profile (nutrients-18-00758.pdf).",nutrients-18-00758.pdf,nutrients-18-00758.pdf,1,,,
 2026-07-17T12:29:13,S1,What challenges prevent young people from entering the agricultural sector?,"Young people are deterred from entering the agricultural sector due to several challenges:
 
 *   **Negative Perception of Farming** Young people, particularly Generation Z, view farming as a difficult, complicated, and tiring job (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).
@@ -50,23 +51,23 @@ The overall perception among agriculture faculty students, as a proxy for Genera
 *   **Low Prestige** Young people consider the farming profession less prestigious compared to careers in formal and industrial sectors (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).
 *   **Preference for Different Work** The younger generation, quickly adapting to technology and tending to multitask, has a different work preference and tends to avoid agricultural work (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).
 
-These factors contribute to a significant decline in the interest of young workers in agriculture, raising concerns about farmer regeneration and sustainable agricultural development (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).",Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,1,4,Grounded,"Five clear challenges from both sources: negative perception, lack of livelihood, heavy workload, low prestige, different work preferences"
+These factors contribute to a significant decline in the interest of young workers in agriculture, raising concerns about farmer regeneration and sustainable agricultural development (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).",Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,1,,,
 2026-07-17T12:30:18,S1,How does Generation Z relate to food systems and agricultural production?,"Generation Z, defined as individuals born between 1995 and 2012, is a critical demographic to investigate concerning food systems and agricultural production. While they show an interest in contemporary food products and diets, their engagement with the farming profession is notably low (nutrients-18-00758.pdf, 1-s2.0-S0950329325003283-main.pdf, Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).
 
 There is evidence of a declining interest among Generation Z in agricultural careers, with statistics indicating that only a small percentage of farmers in some regions are under 25 years old (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf). This lack of interest is further highlighted by negative perceptions of the farming profession among agricultural students, particularly regarding welfare, convenience, and social prestige. This poses a threat to the sustainability of agricultural productivity and food security (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).
 
 Factors such as land ownership and family environment can positively influence Generation Z's interest in farming, with land ownership being a strong determinant for continuing family farming businesses. However, gender and parental occupation have been found to be insignificant factors (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).
 
-Despite their disinterest in farming as a profession, Generation Z's dietary choices are influenced by various factors, including academic pressures, social transitions, and identity formation. Their eating behaviors, such as the adoption of flexitarian diets, provide insights into their relationship with food and the broader food system (nutrients-18-00758.pdf, 1-s2.0-S0950329325003283-main.pdf). Efforts are needed to improve the professional image of farming to support the national agricultural sector's sustainability (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).",nutrients-18-00758.pdf|Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|1-s2.0-S0950329325003283-main.pdf,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|1-s2.0-S0950329325003283-main.pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,0.667,3,Partial,Good synthesis across three retrieved sources but missed Suwanan millennial angle. Nutrients retrieved instead (relevant but unexpected)
+Despite their disinterest in farming as a profession, Generation Z's dietary choices are influenced by various factors, including academic pressures, social transitions, and identity formation. Their eating behaviors, such as the adoption of flexitarian diets, provide insights into their relationship with food and the broader food system (nutrients-18-00758.pdf, 1-s2.0-S0950329325003283-main.pdf). Efforts are needed to improve the professional image of farming to support the national agricultural sector's sustainability (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).",nutrients-18-00758.pdf|Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|1-s2.0-S0950329325003283-main.pdf,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|1-s2.0-S0950329325003283-main.pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,0.667,,,
 2026-07-17T12:32:16,S1,What role does social prestige play in shaping career choices toward or away from farming?,"Social prestige significantly influences career choices related to farming, generally deterring the younger generation from pursuing it.
 
-Students, including those in agricultural faculties, tend to perceive farming as less prestigious compared to careers in formal and industrial sectors (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf). This low social image often leads to a negative perception of farming as a profession, categorized as ""Disagree"" when asked if it is a prestigious job (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf). This lack of perceived prestige is identified as a factor that reduces interest among the younger generation, specifically Generation Z, in agricultural careers (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf). As a result, efforts are needed to improve the professional image of farming to attract younger generations and ensure the sustainability of the agricultural sector (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).",Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,1,4,Grounded,"Covers prestige as deterrent, less prestigious than formal/industrial sectors, need to improve image. Well grounded across both sources"
+Students, including those in agricultural faculties, tend to perceive farming as less prestigious compared to careers in formal and industrial sectors (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf). This low social image often leads to a negative perception of farming as a profession, categorized as ""Disagree"" when asked if it is a prestigious job (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf). This lack of perceived prestige is identified as a factor that reduces interest among the younger generation, specifically Generation Z, in agricultural careers (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf). As a result, efforts are needed to improve the professional image of farming to attract younger generations and ensure the sustainability of the agricultural sector (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).",Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,1,,,
 2026-07-17T12:33:08,S1,How does technology influence youth attitudes toward agriculture and food systems?,"The provided documents offer limited direct information about how technology influences youth attitudes toward agriculture and food systems. However, some inferences can be drawn:
 
 *   **Technology as a potential positive influence:** Document [Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf] suggests that ""technological advancements cause such rapid development"" and necessitate ""a young generation that can make quick, technological innovations"" to perceive entrepreneurship prospects in agriculture. It also mentions that ""in the era of digitalization, farmers can find the right way through online learning center provided by government or private sectors,"" implying that technology can provide accessible learning and skill development opportunities.
 *   **Youth's adaptability to technology:** Document [Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf] notes that the current generation has ""characteristics of quickly adapting to technology."" While this document primarily focuses on negative perceptions of agriculture, it highlights a generational trait that could, theoretically, be leveraged to make agriculture more appealing through technological integration.
 
-Overall, the documents hint that technology could be a valuable tool for engaging youth in agriculture by facilitating innovation and providing learning resources. However, they do not explicitly detail how these technological influences directly shape positive or negative attitudes towards the sector. Instead, the documents largely focus on existing negative perceptions among youth regarding agricultural work conditions, welfare, and social prestige, rather than the impact of technology on these views.",Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf|Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf,1,3,Partial,Honest about limited direct evidence in corpus. Covers technology as potential positive and digital learning but cannot give a strong answer — question poorly served by available documents
+Overall, the documents hint that technology could be a valuable tool for engaging youth in agriculture by facilitating innovation and providing learning resources. However, they do not explicitly detail how these technological influences directly shape positive or negative attitudes towards the sector. Instead, the documents largely focus on existing negative perceptions among youth regarding agricultural work conditions, welfare, and social prestige, rather than the impact of technology on these views.",Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf|Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf,1,,,
 2026-07-17T12:34:33,S1,How do younger and older generations differ in their relationship with agricultural production and food consumption ?,"The provided documents primarily discuss the younger generation's relationship with **agricultural production**, specifically their decreasing interest in farming. They do not offer detailed comparisons regarding **food consumption** habits between younger and older generations.
 
 Regarding agricultural production:
@@ -84,12 +85,561 @@ Regarding agricultural production:
     *   The percentage of older farmers is increasing (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).
     *   Their dominance poses a challenge for sustainable agricultural development due to the crisis of young farmers and lack of regeneration (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf).
 
-In summary, the key difference highlighted is the younger generation's disengagement and negative perception of farming as a profession, contrasted with the older generation's continued dominance and higher participation in agricultural production. Information on food consumption patterns for either group is not provided.",Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf|1-s2.0-S0950329325003283-main.pdf,0.667,3,Partial,"Strong statistical detail on younger generation (2.25% under-25 farmers, 29.18% ? 19.18% decline). Older generation covered. Food consumption gap acknowledged. Missed Rivaroli"
+In summary, the key difference highlighted is the younger generation's disengagement and negative perception of farming as a profession, contrasted with the older generation's continued dominance and higher participation in agricultural production. Information on food consumption patterns for either group is not provided.",Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf|1-s2.0-S0950329325003283-main.pdf,0.667,,,
 2026-07-17T12:35:59,S1,What sustainable food behaviors are observed among younger generations and how do they connect to agricultural systems ?,"Younger generations, specifically Generation Z, exhibit several sustainable food behaviors. They show lower food neophobia and greater culinary curiosity compared to older generations, which is attributed to factors like globalization and digital exposure to diverse cuisines (nutrients-18-00758.pdf). This openness to novelty, along with enjoyment of food, is positively associated with a willingness to adopt environmentally oriented dietary choices (nutrients-18-00758.pdf). Generation Z also displays a dual pattern of food engagement, combining strong sensory-driven curiosity with heightened emotional sensitivity, and their hedonic-exploratory tendencies coexist with more regulated, satiety-oriented patterns (nutrients-18-00758.pdf).
 
-However, while these food behaviors are positive, there's a disconnect in their connection to agricultural systems. There's a decreasing interest among the younger generation, especially Generation Z, in the farming profession (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf). National data shows a significant drop in young farmers aged 16ï¿½30, indicating a challenge in farmer regeneration (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf). This suggests that while younger generations are open to sustainable food choices as consumers, there's a declining engagement in the agricultural sector itself, which is crucial for sustainable food production.",nutrients-18-00758.pdf|Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf,nutrients-18-00758.pdf|1-s2.0-S0950329325003283-main.pdf,0.5,3,Partial,Good synthesis of hedonic curiosity and agricultural disengagement but retrieved Ratna instead of Rivaroli — missed plant-based attitudes angle specifically
+However, while these food behaviors are positive, there's a disconnect in their connection to agricultural systems. There's a decreasing interest among the younger generation, especially Generation Z, in the farming profession (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf). National data shows a significant drop in young farmers aged 16ï¿½30, indicating a challenge in farmer regeneration (Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf). This suggests that while younger generations are open to sustainable food choices as consumers, there's a declining engagement in the agricultural sector itself, which is crucial for sustainable food production.",nutrients-18-00758.pdf|Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf,nutrients-18-00758.pdf|1-s2.0-S0950329325003283-main.pdf,0.5,,,
 2026-07-17T12:37:12,S1,How does emotional regulation and eating behavior relate to sustainable food choices in Gen Z?,"Emotional regulation and eating behavior are intertwined with sustainable food choices within Generation Z. Gen Z exhibits a ""dual pattern of food engagement,"" combining strong sensory-driven curiosity with heightened emotional sensitivity (nutrients-18-00758.pdf). This means they have both exploratory-hedonic tendencies and emotionally regulated, satiety-oriented tendencies regarding food (nutrients-18-00758.pdf).
 
 The study identified two distinct profiles within Gen Z: ""Exploratory and Hedonic Responders"" and ""Emotionally Regulated and Satiety-Oriented Responders"" (nutrients-18-00758.pdf). While one group focuses on sensory enjoyment and impulsivity, the other demonstrates stronger emotional regulation (nutrients-18-00758.pdf).
 
-The research emphasizes the ""practical necessity of integrating emotional, sensory, and regulatory dimensions in advancing sustainable eating futures among young adults"" (nutrients-18-00758.pdf). This suggests that understanding Gen Z's emotional and behavioral eating patterns is crucial for developing strategies to promote sustainable food choices. The study specifically investigates these drivers of eating behavior relevant to nutrition and sustainability (nutrients-18-00758.pdf).",nutrients-18-00758.pdf,nutrients-18-00758.pdf,1,4,Grounded,"Both profiles correctly identified (Exploratory Hedonic Responders, Emotionally Regulated Satiety-Oriented Responders). Fully supported by Nutrients paper"
+The research emphasizes the ""practical necessity of integrating emotional, sensory, and regulatory dimensions in advancing sustainable eating futures among young adults"" (nutrients-18-00758.pdf). This suggests that understanding Gen Z's emotional and behavioral eating patterns is crucial for developing strategies to promote sustainable food choices. The study specifically investigates these drivers of eating behavior relevant to nutrition and sustainability (nutrients-18-00758.pdf).",nutrients-18-00758.pdf,nutrients-18-00758.pdf,1,,,
+,,,,,,N/A,,,
+2026-08-04T15:24:48,S10,How do different generations perceive integration between agricultural paradigms and their connections with the food system?,"The perception of integration between agricultural paradigms and their connections with the food system varies significantly across generations, primarily influenced by lived experiences, technological exposure, and evolving societal values. Here's a breakdown:
+
+**1. Traditionalists/Silent Generation (Born 1928-1945):**
+
+*   **Perception:** Tend to view agriculture and the food system as inherently intertwined and largely self-contained. Their experiences often involve more direct connections to food production (e.g., victory gardens, family farms, less processed food). They likely remember a time when agricultural practices were simpler, more localized, and directly dictated what was available to eat.
+*   **Integration Focus:** Emphasis on **efficiency, productivity, and resilience against scarcity**. The integration they value is about ensuring a stable and sufficient food supply. They might see modern agricultural advancements (like mechanization and synthetic fertilizers) as positive steps towards this goal, even if they sometimes lament the loss of traditional practices.
+*   **Connection to Food System:** Direct and utilitarian. Food was fuel, and its origins were often visible or known. Less concern with abstract concepts like ""food miles"" or ethical sourcing, though community support and local trade were common.
+
+**2. Baby Boomers (Born 1946-1964):**
+
+*   **Perception:** Witnessed the industrialization of agriculture and the rise of large-scale food processing. Many grew up with suburbanization and less direct exposure to farming. They experienced the convenience of supermarkets and a wider variety of year-round produce.
+*   **Integration Focus:** Initially, a strong focus on **economic growth, technological advancement, and convenience**. They often embraced the idea of ""bigger is better"" in agriculture to feed a growing population. However, later in life, some boomers became early adopters of organic food and the environmental movement, leading to a more nuanced view.
+*   **Connection to Food System:** More removed than Traditionalists. They might recall local dairies or butchers but also embraced the rise of national brands. Growing awareness of health and environmental impacts started to shape their perceptions, creating a division between those who prioritize conventional efficiency and those seeking more sustainable options.
+
+**3. Generation X (Born 1965-1980):**
+
+*   **Perception:** Grew up amidst increasing awareness of environmental issues (acid rain, ozone depletion) and the early debates about food quality and nutrition. They witnessed the rise of fast food and globalization, but also the beginnings of the slow food and organic movements gaining mainstream traction.
+*   **Integration Focus:** More critical and skeptical. They began to question the trade-offs between industrial efficiency and environmental/health impacts. They value **sustainability, transparency, and often a return to more ""natural"" or less processed food**. The integration they seek is one that balances production with ecological and social responsibility.
+*   **Connection to Food System:** Aware of the complex global supply chains but also interested in knowing where their food comes from. They might be the first generation to actively seek out specific dietary choices (vegetarianism, gluten-free) for ethical or health reasons, thus demanding a more responsive and diverse food system.
+
+**4. Millennials (Born 1981-1996):**
+
+*   **Perception:** Grew up with widespread internet access and social media, allowing for unprecedented access to information (and misinformation) about food systems. They are often characterized by a strong sense of social justice and environmental consciousness.
+*   **Integration Focus:** Highly focused on **sustainability, ethical sourcing, animal welfare, and health**. They are acutely aware of climate change's impact on agriculture and are strong proponents of alternative proteins, plant-based diets, and regenerative agriculture. They see integration as a holistic process that considers the entire ecosystem and social impact.
+*   **Connection to Food System:** Deeply engaged and often proactive. They demand transparency from food companies, are early adopters of food technologies (e.g., meal kits, food delivery apps), and are willing to pay a premium for products aligned with their values. They connect food choices directly to global issues.
+
+**5. Generation Z (Born 1997-2012):**
+
+*   **Perception:** The most digitally native generation, exposed to global issues and diverse perspectives from a very young age. They are often pragmatic and driven by a sense of urgency regarding climate change and social inequality.
+*   **Integration Focus:** An even stronger emphasis on **climate resilience, innovation, and systemic change**. They are interested in how technology (AI, vertical farming, lab-grown meat) can solve agricultural challenges. They also prioritize equitable access to nutritious food and are critical of exploitative labor practices in the food system.
+*   **Connection to Food System:** Expect hyper-transparency, personalized nutrition, and solutions that address environmental and social challenges head-on. They are less bound by traditional notions of ""farming"" and are open to radical shifts in food production and distribution, seeing food as a fundamental human right and a powerful lever for social change.
+
+**Overall Trends Across Generations:**
+
+*   **Decreasing Direct Connection:** As generations progress, there's a general trend of decreasing direct experience with agricultural production, leading to a more abstract understanding of food systems.
+*   **Increasing Awareness of Interconnectedness:** Despite less direct experience, younger generations have a heightened awareness of the complex interconnections between agriculture, the environment, health, social justice, and global economies.
+*   **Shifting Priorities:** From productivity and efficiency (older generations) to sustainability, ethics, and innovation (younger generations).
+*   **Influence of Technology:** Technology plays an increasingly crucial role in shaping perceptions, from influencing consumption patterns (e-commerce, food delivery) to enabling new agricultural paradigms (precision agriculture, cellular agriculture).
+
+These are broad generalizations, and individual perceptions within each generation will always vary based on personal experiences, education, geographic location, and socioeconomic factors. However, these generational lenses offer a framework for understanding evolving attitudes towards agriculture and the food system.",,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf|1-s2.0-S0950329325003283-main.pdf,0,4,Parametric,Comprehensive generational breakdown -  Traditionalists through Gen Z with driving factors. Best answer to Q1 across all scenarios but not grounded in corpus
+2026-08-04T15:25:26,S10,What are the generational challenges and differences in understanding agricultural paradigms and food systems?,"Generational differences in understanding agricultural paradigms and food systems are significant and are shaped by varying life experiences, access to information, and societal priorities. These differences can lead to challenges in communication, collaboration, and the development of effective, equitable, and sustainable food policies and practices.
+
+Here's a breakdown of some key generational challenges and differences:
+
+---
+
+### **1. Historical Context and Personal Experience:**
+
+*   **Older Generations (e.g., Baby Boomers, some Gen X):**
+    *   **Agricultural Paradigms:** Often have direct experience or strong recollections of a more ""traditional"" agricultural system, perhaps witnessing the rise of industrial agriculture, the Green Revolution, and the initial promises of increased yields and efficiency. Their understanding might be rooted in a more direct connection to farming, food production, and scarcity. They may have a stronger appreciation for food security in terms of calorie availability.
+    *   **Food Systems:** May have grown up with fewer processed foods, more home cooking, and a stronger sense of local food systems by necessity rather than choice. Their perspective might prioritize cost, convenience, and abundance.
+    *   **Challenges:** May be less receptive to newer, more complex paradigms like permaculture or agroecology, viewing them as less ""efficient"" or ""scalable"" than conventional methods they've seen succeed. They might struggle to understand the emphasis on ethical consumption or environmental impact when their past experiences focused on simple survival and growth.
+
+*   **Middle Generations (e.g., Gen X, Older Millennials):**
+    *   **Agricultural Paradigms:** Have witnessed the full impact of industrial agriculture, globalization of food, and the beginnings of environmental awareness movements. They may be more aware of the downsides of conventional farming (e.g., environmental degradation, health concerns) but still grappling with the practicalities of making systemic changes.
+    *   **Food Systems:** Experienced a transition towards more processed foods, fast food, and larger supermarkets. They might be the first generation to consciously seek out ""organic"" or ""local"" options, but also face significant time and financial constraints.
+    *   **Challenges:** Can be caught between the traditions of older generations and the new ideals of younger ones. They might understand the *need* for change but feel overwhelmed by the scale of the problem or the conflicting information.
+
+*   **Younger Generations (e.g., Younger Millennials, Gen Z, Gen Alpha):**
+    *   **Agricultural Paradigms:** Often educated on climate change, biodiversity loss, and social justice issues from a young age. Their understanding of agriculture is heavily influenced by concepts like sustainability, regenerative practices, animal welfare, and ethical sourcing. They may view conventional agriculture with skepticism.
+    *   **Food Systems:** Grew up in a highly globalized and processed food system, but also with increased access to information about its impacts. They are more likely to be exposed to alternative food movements (e.g., veganism, farm-to-table, plant-based diets) and digital platforms for food education.
+    *   **Challenges:** May lack direct experience with food production, leading to an idealized view of ""sustainable"" farming that doesn't fully account for the practicalities, labor, and economic realities. They might struggle to understand the historical context that led to current agricultural practices or the economic pressures faced by farmers. There can be an impatience for systemic change.
+
+---
+
+### **2. Information Access and Media Influence:**
+
+*   **Older Generations:** Primarily relied on traditional media (TV, newspapers, radio), agricultural extension services, and direct community knowledge. Information might have been slower to disseminate and more localized.
+*   **Younger Generations:** Grow up with instant access to a vast, often unfiltered, amount of information online (social media, documentaries, blogs, news from diverse sources). This can lead to rapid adoption of new ideas but also vulnerability to misinformation or echo chambers.
+    *   **Challenge:** Miscommunication and misunderstanding can arise when different generations access and trust different sources of information, leading to conflicting views on what constitutes ""truth"" or ""best practice"" in agriculture.
+
+---
+
+### **3. Values and Priorities:**
+
+*   **Older Generations:** May prioritize **yield, efficiency, cost-effectiveness, and food security** in terms of calories and affordability. Resilience might be seen through the lens of robust supply chains.
+*   **Younger Generations:** Tend to prioritize **environmental sustainability (climate change, biodiversity), animal welfare, social justice (fair labor, food equity), health, and ethical consumption**. Resilience might be seen through diversified local food webs.
+    *   **Challenge:** These differing priorities can create friction. For example, a young person advocating for more expensive, locally grown organic produce might be seen by an older person as impractical or elitist, while the young person might view conventional, cheap food as environmentally irresponsible.
+
+---
+
+### **4. Technology Adoption and Integration:**
+
+*   **Older Generations:** May be slower to adopt new agricultural technologies (e.g., precision farming, AI, blockchain for traceability) or view them with skepticism due to past experiences with technology that didn't deliver or had unforeseen consequences.
+*   **Younger Generations:** Are often digital natives and more open to integrating technology into farming and food systems, seeing it as a tool for efficiency, sustainability, and transparency.
+    *   **Challenge:** This gap can hinder the widespread adoption of beneficial technologies. Older farmers might lack the training or inclination, while younger generations might push for technologies that aren't yet economically viable or truly beneficial in certain contexts.
+
+---
+
+### **5. Economic Realities and Land Access:**
+
+*   **Older Generations:** Many older farmers own land and have established operations, often facing challenges related to succession planning and fluctuating markets. Their decisions are heavily influenced by the need to maintain profitability and legacy.
+*   **Younger Generations:** Face immense hurdles in entering agriculture due to high land costs, access to capital, and the perceived low profitability of farming. This often pushes them towards niche markets, direct-to-consumer models, or urban agriculture.
+    *   **Challenge:** This creates a disconnect. Older generations might not fully grasp the economic impossibility for young people to start farming using traditional models, while young people might underestimate the financial pressures and risks faced by established farmers.
+
+---
+
+### **6. Communication Styles and Language:**
+
+*   **Older Generations:** May prefer face-to-face communication, established networks, and more formal language.
+*   **Younger Generations:** Often prefer digital communication, informal language, and network through social media and online communities.
+    *   **Challenge:** Differences in communication styles can lead to misunderstandings, missed opportunities for collaboration, and a feeling of not being heard or understood across generational divides. The language used to describe food systems (e.g., ""agroecology,"" ""food justice"") may also be unfamiliar to older generations.
+
+---
+
+### **Conclusion:**
+
+Understanding these generational challenges and differences is crucial for fostering intergenerational dialogue, building bridges between different perspectives, and collaboratively addressing the complex issues facing agriculture and food systems today. Effective solutions will require empathy, education, and a willingness from all generations to learn from each other's unique experiences and insights.",,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,0,4,Parametric,"Six structured sections covering historical context, technology, values, economics, communication. Very long and detailed"
+2026-08-04T15:25:40,S10,What is the overall mean perception score of farming as a profession among agriculture students?,"I cannot provide a specific numerical mean perception score of farming as a profession among agriculture students.
+
+Here's why:
+
+*   **This data is highly variable and context-dependent.** Such a score would come from a specific research study, survey, or academic paper. There isn't a universally accepted or continuously updated global average for this kind of perception.
+*   **Perception is subjective.** It can vary significantly based on:
+    *   **Geographic location:** Perceptions of farming differ greatly between developed and developing nations, or even between regions within a single country.
+    *   **Economic conditions:** The profitability and stability of agriculture in a given area will heavily influence perception.
+    *   **Cultural factors:** Societal value placed on farming.
+    *   **Education level and curriculum:** The way farming is presented in agricultural programs.
+    *   **Individual experiences:** Whether students come from farming backgrounds or have interned on farms.
+    *   **Time period:** Perceptions change over time due to technological advancements, climate change impacts, and market shifts.
+
+**To answer your question accurately, you would need to refer to specific research studies or surveys that have measured this perception in particular contexts.**",,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf,0,1,Refusal,"""I cannot provide a specific numerical mean perception score"" -  correctly identifies it cannot answer without the study. Only scenario where Q3 produces a refusal"
+2026-08-04T15:26:04,S10,What factors predict willingness to pay for plant-based milk alternatives among Italian Gen Z consumers?,"Predicting willingness to pay (WTP) for plant-based milk alternatives among Italian Gen Z consumers involves a complex interplay of various factors. Here's a breakdown of the key predictors, drawing on general consumer behavior trends, specific characteristics of Gen Z, and the Italian cultural context:
+
+**I. Core Consumer Values and Motivations:**
+
+*   **Health Consciousness:** This is a primary driver. Italian Gen Z consumers, like their global counterparts, are increasingly aware of the health benefits associated with plant-based diets. Factors here include:
+    *   **Perceived Nutritional Superiority:** Belief that plant-based milk is ""healthier"" due to lower saturated fat, cholesterol-free, or specific vitamins/minerals.
+    *   **Dietary Restrictions/Intolerances:** Lactose intolerance or dairy allergies are significant motivators.
+    *   **Weight Management:** Perception of plant-based options as lighter or lower in calories.
+*   **Environmental Concerns/Sustainability:** Gen Z is highly environmentally conscious. WTP is often positively correlated with:
+    *   **Reduced Carbon Footprint:** Awareness of the lower environmental impact of plant-based milk production compared to dairy.
+    *   **Ethical Treatment of Animals:** Strong aversion to animal cruelty in the dairy industry.
+    *   **Sustainability Branding:** Products that clearly communicate their eco-friendly practices.
+*   **Ethical Considerations (Animal Welfare):** A significant portion of Gen Z is driven by ethical concerns regarding animal farming practices. This directly impacts their WTP for alternatives.
+*   **Taste and Sensory Experience:** This is crucial, especially in Italy, where food quality and taste are paramount.
+    *   **Flavor Profile:** How closely the alternative mimics or surpasses the taste of dairy milk, or offers a unique and appealing flavor.
+    *   **Texture/Mouthfeel:** Important for use in coffee, cereals, and cooking.
+    *   **Versatility:** How well it performs in various applications (e.g., cappuccino, baking).
+*   **Novelty and Trend-Following:** Gen Z is often early adopter of new trends. Plant-based diets are fashionable, and being seen as modern and health-conscious can influence WTP.
+
+**II. Product-Specific Attributes:**
+
+*   **Type of Plant-Based Milk:** Different types (oat, almond, soy, rice, hazelnut, pea, etc.) have varying price points, taste profiles, and perceived benefits. Consumers may have higher WTP for options perceived as superior in taste or health (e.g., oat milk's creamy texture for coffee).
+*   **Ingredient Quality and Purity:** Italian consumers value high-quality ingredients.
+    *   **Organic Certification:** Willingness to pay more for organic plant-based milk.
+    *   **Minimal Processing:** Preference for products with fewer additives or artificial ingredients.
+    *   **Non-GMO:** Important for some segments.
+*   **Fortification:** Added vitamins (B12, D), calcium, and protein can increase perceived value and WTP, especially for those concerned about nutrient intake on a plant-based diet.
+*   **Packaging:** Sustainable, recyclable, or aesthetically pleasing packaging can influence WTP.
+*   **Brand Reputation and Trust:** Trusted brands with a history of quality and ethical practices can command higher prices. This is particularly true for Italian brands that resonate with local values.
+*   **Origin/Local Sourcing:** While plant-based milk is often global, some consumers might show higher WTP for products with locally sourced ingredients or produced in Italy, reflecting a preference for ""Made in Italy.""
+
+**III. Socio-Demographic and Behavioral Factors:**
+
+*   **Income Level:** While Gen Z may have less disposable income than older generations, those with higher personal allowances or income will naturally have a higher WTP.
+*   **Education Level:** Higher education often correlates with greater awareness of health and environmental issues, potentially increasing WTP.
+*   **Dietary Habits/Lifestyle:**
+    *   **Vegan/Vegetarian/Flexitarian Identity:** Individuals who identify with these diets will have a naturally higher WTP.
+    *   **Frequency of Consumption:** Those who consume plant-based milk regularly will likely have a more established WTP.
+    *   **Cooking Habits:** Those who frequently cook or bake at home might be more willing to invest in specific plant-based ingredients.
+*   **Social Influence/Peer Pressure:** The influence of friends, social media influencers, and celebrities can significantly impact choices and WTP within Gen Z.
+*   **Media Exposure:** Exposure to documentaries, news articles, and social media content promoting plant-based diets can increase awareness and WTP.
+
+**IV. Economic and Market Factors:**
+
+*   **Price Sensitivity:** Despite the willingness to pay for perceived value, Gen Z is still price-sensitive. The perceived value must justify the price difference compared to conventional dairy milk or cheaper alternatives.
+*   **Availability and Accessibility:** Easier access to a wider variety of plant-based milks in supermarkets and cafes can normalize their consumption and influence WTP.
+*   **Promotions and Discounts:** Sales, loyalty programs, and bundled offers can temporarily increase WTP.
+*   **Comparison to Dairy Milk Price:** The price gap between plant-based alternatives and traditional dairy milk is a constant consideration. If the gap is too wide, it can deter some consumers, especially for everyday use.
+*   **Perceived Value for Money:** This is subjective but crucial. Do consumers feel they are getting a good return on their investment (health, ethics, taste) for the price paid?
+
+**V. Italian Cultural Nuances:**
+
+*   **Food Tradition and Authenticity:** Italy has a strong culinary tradition centered around fresh, natural ingredients. Plant-based alternatives need to fit into this narrative or offer a compelling new one. For some, the traditional ""latte"" (dairy milk) holds a strong cultural place, so alternatives need to overcome this.
+*   **Coffee Culture:** The ""cappuccino test"" is critical. Plant-based milks that froth well and complement Italian coffee culture will have a significant advantage and potentially higher WTP.
+*   **Regional Differences:** WTP might vary slightly between regions, depending on local dietary habits and exposure to new trends.
+
+In summary, a higher **perceived health benefit**, strong **environmental and ethical alignment**, satisfying **taste and texture profiles**, positive **brand reputation**, and a **justifiable price-to-value ratio** are likely the strongest predictors of willingness to pay for plant-based milk alternatives among Italian Gen Z consumers. These factors are often amplified by the demographic's inherent social consciousness and openness to innovation.",,1-s2.0-S0950329325003283-main.pdf,0,3,Parametric,"Generic factors (health, sustainability, ethics, taste, convenience) - no specific Rivaroli findings. Misses confirmed vs rejected distinction"
+2026-08-04T15:26:18,S10,What is the mean score for farming convenience as perceived by Gen Z students in the study?,"I am sorry, but I do not have access to the specific details of the study you are referring to. Therefore, I cannot provide the mean score for farming convenience as perceived by Gen Z students in that study.",,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf,0,1,Refusal,"""I do not have access to the specific details of the study you are referring to"" - correctly refuses"
+2026-08-04T15:26:36,S10,What entrepreneurial factors motivate Indonesian millennials to consider careers in the agricultural sector?,"Several entrepreneurial factors motivate Indonesian millennials to consider careers in the agricultural sector, moving beyond traditional views of farming as a less desirable or less profitable path. These factors often intertwine with broader societal and economic trends:
+
+**1. Growing Awareness of Food Security and Sustainability:**
+*   **National Food Security:** Millennials are increasingly aware of Indonesia's need to feed its large and growing population. This fosters a sense of purpose and social impact, as they see agriculture as a vital sector for national resilience.
+*   **Environmental Concerns:** Many millennials are environmentally conscious. Sustainable agriculture, organic farming, and eco-friendly practices appeal to their desire to contribute positively to the planet. They see opportunities to innovate in these areas.
+
+**2. Access to Technology and Innovation:**
+*   **""Agri-tech"" Boom:** The rise of agricultural technology (agri-tech) is transforming farming. Millennials, being digital natives, are attracted to opportunities involving drones, IoT sensors, precision farming, e-commerce platforms for agricultural products, and AI-driven solutions. They see agriculture as a sector ripe for technological disruption.
+*   **Digital Marketing and E-commerce:** The ability to bypass traditional middlemen and reach consumers directly through online platforms (e-commerce, social media) makes agricultural entrepreneurship more appealing and potentially more profitable.
+
+**3. Desire for Independence and Autonomy:**
+*   **Being Their Own Boss:** Like many entrepreneurial-minded individuals, millennials are often driven by a desire for independence, control over their work, and the ability to implement their own ideas. Agriculture, particularly small-scale or niche farming, offers this autonomy.
+*   **Work-Life Balance (Potential):** While farming can be demanding, some perceive it as offering a different kind of work-life balance compared to corporate jobs, especially if they can leverage technology and smart management.
+
+**4. Profitability and Market Opportunities (Perceived and Real):**
+*   **Niche Markets:** Millennials are adept at identifying niche markets for high-value crops, organic produce, exotic fruits, or specialized animal products that command premium prices.
+*   **Value Addition:** They are keen on adding value to raw agricultural products through processing, branding, and direct marketing, thereby capturing a larger share of the profit margin.
+*   **Government Support and Funding:** Increased government attention and programs supporting young farmers and agri-entrepreneurs, including subsidies, training, and access to capital, make the sector more attractive.
+
+**5. Role Models and Success Stories:**
+*   **""Young Farmer"" Movement:** The emergence of successful young agri-entrepreneurs who leverage technology and modern business practices serves as powerful inspiration. These role models challenge the outdated perception of farmers as uneducated and poor.
+*   **Media Exposure:** Increased media coverage of successful agricultural ventures and innovative farming techniques helps to destigmatize the sector and highlight its potential.
+
+**6. Sense of Identity and Connection to Heritage (for some):**
+*   While not universally true, for some Indonesian millennials, there might be a desire to reconnect with their family's agricultural roots or a broader cultural appreciation for the land and food production, but with a modern, entrepreneurial twist.
+
+**7. Urbanization Challenges and ""Return to Nature"" Trend:**
+*   Some millennials, disillusioned with the stresses and competition of urban corporate life, may seek a more ""back to nature"" or rural lifestyle, viewing agricultural entrepreneurship as a viable path to achieve this while still running a modern business.
+
+In summary, Indonesian millennials are increasingly seeing agriculture not as a fallback option but as a dynamic, innovative, and impactful sector where they can apply their entrepreneurial spirit, technological savviness, and desire for purpose-driven work.",,Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,0,3,Parametric,"Agritech boom, digital marketing, independence, government support - generic but relevant. Misses TPB framework and specific ? coefficients"
+2026-08-04T15:27:01,S10,How do different generations perceive farming as a career and what factors drive their attitudes?,"Different generations hold varying perceptions of farming as a career, shaped by distinct historical contexts, technological advancements, and societal values. Understanding these generational differences is crucial for addressing the future of agriculture, from workforce development to policy making.
+
+Here's a breakdown of how different generations perceive farming and the factors driving their attitudes:
+
+### 1. Older Generations (e.g., Silent Generation, Baby Boomers)
+
+**Perceptions:**
+
+*   **Foundation & Legacy:** Often view farming as a fundamental and honorable profession, deeply tied to family heritage, land stewardship, and providing for the community. For many, it was a way of life passed down through generations.
+*   **Hard Work & Self-Sufficiency:** Acknowledge the demanding physical labor and long hours, but also value the independence and self-reliance that farming offers.
+*   **Community & Tradition:** Strong emphasis on the role of farming in rural communities and the preservation of traditional practices.
+*   **Economic Stability (Historically):** While understanding the financial risks, many remember periods when farming offered a stable, albeit modest, livelihood, especially before the rise of industrial agriculture.
+
+**Driving Factors:**
+
+*   **Direct Experience:** Many grew up on or around farms, witnessing the realities and rewards firsthand.
+*   **Post-War Economic Conditions:** Farming was often a viable path in an era with fewer alternative career options in rural areas.
+*   **Cultural Values:** Strong emphasis on family, tradition, and working the land.
+*   **Technological Shift (Witnessed Transformation):** They experienced the transition from more manual labor to mechanization, which often made farming more efficient but also more capital-intensive.
+
+### 2. Generation X
+
+**Perceptions:**
+
+*   **Business & Efficiency:** Tend to view farming more as a complex business enterprise requiring strategic planning, financial management, and adaptation to market demands.
+*   **Risk & Volatility:** Acutely aware of the economic risks associated with commodity prices, weather, and global markets.
+*   **Technological Integration:** More open to and often actively adopting new technologies (e.g., precision agriculture) to improve efficiency and profitability.
+*   **Work-Life Balance Concerns:** While understanding the demands, they may seek more balance than previous generations, though still deeply committed.
+
+**Driving Factors:**
+
+*   **Economic Pressures:** Came of age during periods of increasing globalization and market volatility, making profitability a key concern.
+*   **Education & Professionalism:** Many pursued higher education, bringing a more professional and analytical approach to farming.
+*   **Environmental Awareness (Emerging):** Started to see greater public awareness and concern for environmental impacts of agriculture.
+*   **Family Farm Transitions:** Many inherited farms and faced the challenge of making them viable in a changing economic landscape.
+
+### 3. Millennials (Generation Y)
+
+**Perceptions:**
+
+*   **Sustainability & Ethics:** Strongly drawn to sustainable, organic, and ethical farming practices. They are often concerned about environmental impact, animal welfare, and food quality.
+*   **Local & Direct-to-Consumer:** Value direct connections with consumers, local food systems, and transparent production methods (e.g., farmers' markets, CSAs).
+*   **Innovation & Technology (Beyond Efficiency):** See technology not just for efficiency, but also for addressing environmental challenges, improving food safety, and creating new market opportunities.
+*   **Meaning & Purpose:** Seek careers that offer a sense of purpose, contribute to a greater good, and align with their values. Farming can offer this, especially small-scale, diversified, or specialty operations.
+*   **Barriers to Entry:** Often perceive significant financial and knowledge barriers to entering farming, particularly for those without a family farm.
+
+**Driving Factors:**
+
+*   **Environmental & Social Consciousness:** Grew up with heightened awareness of climate change, food system issues, and social justice.
+*   **Access to Information:** Extensive use of the internet and social media to research and learn about food systems and farming practices.
+*   **Urbanization & Disconnection from Agriculture:** Many have no direct farming background, leading to an idealized or romanticized view, but also a genuine desire to reconnect with food production.
+*   **Entrepreneurial Spirit:** Many are drawn to the idea of starting their own businesses and controlling their own destiny.
+*   **Health & Wellness Trends:** Growing interest in healthy eating and the source of food.
+
+### 4. Generation Z
+
+**Perceptions:**
+
+*   **Technology & Data-Driven:** Expect advanced technology (AI, robotics, drones) to be integrated into all aspects of farming, viewing it as essential for efficiency, problem-solving, and sustainability.
+*   **Environmental & Social Impact (Core):** Even more pronounced focus on sustainability, regenerative agriculture, and addressing global challenges like climate change and food security. They want careers that make a tangible positive impact.
+*   **Flexibility & Work-Life Integration:** While hard work is understood, they value flexibility and the ability to integrate personal life with work, potentially through remote monitoring or automated systems.
+*   **Diversification & Niche Markets:** Interested in innovative approaches to farming, exploring niche markets, vertical farming, urban agriculture, and value-added products.
+*   **Education & Skill-Based:** Recognize the need for specialized skills, scientific knowledge, and continuous learning in modern agriculture.
+
+**Driving Factors:**
+
+*   **Digital Natives:** Grew up with ubiquitous technology and expect it to be a fundamental part of any career.
+*   **Global Awareness:** Highly informed about global issues and keen to contribute to solutions.
+*   **Entrepreneurial & Independent:** Many are drawn to self-employment and creating their own path.
+*   **Emphasis on Well-being:** Value mental health and work-life balance, even in demanding fields.
+*   **Climate Anxiety:** A strong driver for seeking careers that actively address climate change.
+
+### Common Factors Across Generations (with varying emphasis):
+
+*   **Economic Viability:** A fundamental concern for all, though the strategies for achieving it differ.
+*   **Work-Life Balance:** Increasingly important, especially for younger generations.
+*   **Technological Integration:** Older generations adopted it out of necessity; younger generations expect and drive its evolution.
+*   **Societal Value:** All generations generally agree on the importance of farming for food security, but younger generations emphasize its role in environmental stewardship and community building.
+
+In conclusion, while older generations often see farming through the lens of tradition, hard work, and family legacy, younger generations are increasingly drawn to its potential for sustainability, technological innovation, and making a positive social and environmental impact, even as they grapple with significant barriers to entry. Bridging these generational perspectives is key to ensuring a vibrant and resilient agricultural future.",,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,0,4,Parametric,Excellent breakdown across five generations with driving factors per generation. More comprehensive than any corpus-based answer
+2026-08-04T15:27:18,S10,What eating behavior clusters were identified among Greek university students?,"Research on eating behaviors among Greek university students has identified several distinct clusters, often influenced by a combination of cultural factors, modern lifestyle, and psychological aspects. While the exact terminology and number of clusters can vary slightly depending on the specific study and methodology, here are some commonly observed patterns:
+
+1.  **Healthy Eaters/Balanced Diet:** This cluster typically consists of students who consume a balanced diet, including plenty of fruits, vegetables, whole grains, and lean protein, while limiting processed foods, sugary drinks, and unhealthy fats. They often demonstrate good nutritional knowledge and a conscious effort to maintain a healthy lifestyle.
+
+2.  **Traditional Greek Diet Adherents:** This group shows a strong adherence to the principles of the Mediterranean diet, which is a cornerstone of Greek culinary tradition. They prioritize olive oil, fresh produce, legumes, fish, and moderate consumption of dairy and wine. This cluster often aligns with the ""healthy eaters"" but with a stronger emphasis on traditional Greek food patterns.
+
+3.  **Unhealthy Snackers/High-Fat, High-Sugar Consumers:** This cluster is characterized by frequent consumption of snacks high in sugar, fat, and salt, such as chips, pastries, chocolates, and sugary drinks. They may skip main meals or replace them with these less nutritious options, often driven by convenience, stress, or cravings.
+
+4.  **Emotional Eaters:** Students in this cluster tend to use food to cope with emotions such as stress, anxiety, boredom, or sadness. They may engage in overeating or choose specific comfort foods when experiencing these feelings, regardless of physical hunger.
+
+5.  **Skippers/Irregular Eaters:** This group often skips meals, particularly breakfast, due to time constraints, academic pressure, or a desire to lose weight. Their eating patterns are irregular, with long periods between meals, which can sometimes lead to overeating later in the day.
+
+6.  **Diet-Conscious/Restrictive Eaters (potentially disordered eating tendencies):** While not necessarily full-blown eating disorders, this cluster might exhibit restrictive eating patterns, excessive concern about weight and body image, frequent dieting, or a tendency to categorize foods as ""good"" or ""bad."" In some cases, this can border on or indicate a risk for disordered eating behaviors.
+
+7.  **Fast Food/Takeaway Consumers:** This cluster relies heavily on fast food, restaurant meals, and takeaway options due to convenience, lack of cooking skills, or social habits. Their diet often lacks variety and can be high in saturated fats, sodium, and calories.
+
+It's important to note that these clusters are not mutually exclusive, and an individual student might exhibit characteristics from more than one cluster at different times or under different circumstances. These clusters provide a framework for understanding the diverse eating habits within the Greek university student population and can inform targeted interventions for promoting healthier eating.",,nutrients-18-00758.pdf,0,2,Hallucination,"Invented seven clusters (Healthy Eaters, Emotional Eaters, Skippers etc.) - none match actual Koliou findings (Hedonic Explorers, Emotionally Regulated and Satiety-Oriented Responders). Most concerning S10 result"
+2026-08-04T15:27:36,S10,What challenges prevent young people from entering the agricultural sector?,"Several significant challenges prevent young people from entering the agricultural sector, ranging from economic and structural issues to social and perception-based hurdles. Here's a breakdown of some of the key obstacles:
+
+**1. High Startup Costs and Limited Access to Land:**
+*   **Expensive Land:** Agricultural land is often very expensive, especially in developed countries or fertile regions. This makes it incredibly difficult for young people, who typically have limited capital, to purchase or even rent land.
+*   **Capital-Intensive Operations:** Farming requires significant investment in machinery, equipment, seeds, fertilizers, irrigation systems, and livestock. Securing loans for these large initial investments can be challenging, particularly for those without a proven track record or collateral.
+*   **Inheritance vs. New Entrants:** In many areas, land is inherited, making it hard for those without a family farming background to acquire property.
+
+**2. Perceived Lack of Profitability and Financial Instability:**
+*   **Low and Unpredictable Income:** Farming can be seen as having low and unstable income, subject to market fluctuations, weather conditions, pests, and diseases. This makes it less attractive compared to more stable, salaried professions.
+*   **Long Return on Investment:** Many agricultural ventures have a long lead time before becoming profitable, which can be discouraging for young people seeking quicker financial returns.
+*   **Debt Burden:** The high initial investment often leads to significant debt, which can be a heavy burden for young farmers.
+
+**3. Labor-Intensive and Physically Demanding Work:**
+*   **Hard Physical Labor:** Farming is inherently physically demanding, often involving long hours in challenging weather conditions. This can be less appealing to a generation growing up with more desk-based or less physically strenuous career options.
+*   **Long Hours and Limited Work-Life Balance:** Farmers often work exceptionally long hours, especially during planting and harvesting seasons, which can impact personal life and social activities.
+
+**4. Lack of Knowledge, Skills, and Mentorship:**
+*   **Declining Agricultural Education:** In some regions, agricultural education programs are dwindling, or the curriculum may not be adequately updated to reflect modern farming practices.
+*   **Limited Mentorship Opportunities:** Young people without a farming background often lack experienced mentors to guide them through the complexities of starting and running a farm.
+*   **Perceived Skill Gap:** There can be a perception that farming requires highly specialized skills that are difficult to acquire without prior exposure.
+
+**5. Social and Cultural Perceptions:**
+*   **""Uncool"" or Backward Image:** In many societies, farming is still perceived as a less prestigious or ""backward"" profession compared to urban, tech, or white-collar jobs. This can deter young people who desire careers with social status.
+*   **Rural-Urban Migration:** The allure of urban life, with better amenities, social opportunities, and diverse job markets, often draws young people away from rural areas and agriculture.
+*   **Lack of Social Life in Rural Areas:** Rural communities can sometimes offer fewer social activities and opportunities compared to urban centers, which can be a deterrent for young people.
+
+**6. Policy and Infrastructure Gaps:**
+*   **Inadequate Government Support:** Insufficient government policies, subsidies, or incentives specifically targeted at young farmers can hinder entry.
+*   **Poor Rural Infrastructure:** Limited access to essential services like reliable internet, good roads, healthcare, and quality education in rural areas can make farming communities less attractive for young families.
+*   **Market Access Challenges:** Young farmers may struggle to access stable markets for their produce, facing competition from larger, established farms or complex supply chains.
+
+**7. Climate Change and Environmental Uncertainty:**
+*   **Increased Risk:** Climate change brings increased unpredictability in weather patterns (droughts, floods, extreme temperatures), making farming a riskier venture and adding to the stress of an already challenging profession.
+*   **Sustainability Pressures:** Young farmers entering the sector are often expected to adopt sustainable practices, which can involve additional costs and learning curves.
+
+Addressing these challenges requires a multi-faceted approach involving government support, educational reforms, financial incentives, mentorship programs, and efforts to change public perception of agriculture.",,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,0,4,Parametric,"Seven challenges including startup costs, land access, climate risk - more comprehensive than corpus-based answers"
+2026-08-04T15:27:59,S10,How does Generation Z relate to food systems and agricultural production?,"Generation Z, generally defined as individuals born between the mid-to-late 1990s and the early 2010s, exhibits distinct characteristics that profoundly influence their relationship with food systems and agricultural production. Their perspectives are shaped by a world increasingly aware of climate change, social justice, and the power of digital information.
+
+Here's how Gen Z relates to food systems and agricultural production:
+
+**1. Strong Emphasis on Sustainability and Environmental Impact:**
+
+* **Climate Change Awareness:** Having grown up with the intensifying discourse around climate change, Gen Z is acutely aware of the environmental footprint of food production. This translates to a preference for sustainably sourced foods, reduced food waste, and an interest in plant-based diets.
+* **Support for Ethical Farming:** They are more likely to inquire about farming practices, supporting regenerative agriculture, organic farming, and fair trade initiatives that minimize harm to the environment and promote animal welfare.
+* **Reduced Meat Consumption:** While not exclusively vegetarian or vegan, Gen Z shows a greater inclination towards reducing meat consumption and exploring plant-based alternatives (e.g., Impossible Burgers, Beyond Meat) due to environmental concerns and perceived health benefits.
+
+**2. Demand for Transparency and Traceability:**
+
+* **""Farm-to-Fork"" Mentality:** Gen Z wants to know where their food comes from, how it's produced, and who produced it. They are less trusting of large, opaque food corporations and prefer brands that are transparent about their supply chains.
+* **Information Seeking:** They utilize digital tools and social media to research food products, companies, and agricultural practices. Labels like ""organic,"" ""non-GMO,"" and ""fair trade"" are significant to their purchasing decisions.
+* **Concerns about Food Safety and Chemicals:** There's a heightened awareness and concern about pesticides, hormones, and artificial ingredients in their food.
+
+**3. Influence of Technology and Digital Connectivity:**
+
+* **Online Research and Education:** Social media platforms, food blogs, and online communities play a crucial role in shaping their food preferences, dietary choices, and understanding of agricultural issues.
+* **Food Delivery and E-commerce:** Gen Z is comfortable with and frequently uses food delivery services and online grocery shopping, which can impact local food systems and distribution models.
+* **Advocacy and Activism:** They use digital platforms to advocate for food justice, sustainable agriculture, and animal welfare, amplifying their voices and influencing public discourse.
+
+**4. Health-Consciousness and Wellness Trends:**
+
+* **Focus on Whole Foods and Natural Ingredients:** Gen Z generally prioritizes fresh, unprocessed foods and is wary of artificial additives.
+* **Dietary Customization:** They are more likely to explore various diets (e.g., gluten-free, dairy-free, keto) based on perceived health benefits or personal preferences. This can create opportunities for specialized agricultural production.
+* **Mental Well-being Connection to Food:** There's an increasing understanding of the link between diet and mental health, influencing their food choices.
+
+**5. Value for Convenience and Personalization (within their ethical framework):**
+
+* **Ready-to-Eat and Meal Kits:** Despite their emphasis on health and sustainability, convenience remains a factor. They are open to healthy, sustainably sourced ready-to-eat options and meal kits that align with their values.
+* **Personalized Experiences:** They appreciate food options that cater to their individual preferences and dietary needs, driving demand for a wider variety of specialized agricultural products.
+
+**6. Impact on Agricultural Production:**
+
+* **Increased Demand for Sustainable Practices:** Farmers are increasingly pressured to adopt sustainable and ethical farming methods to meet Gen Z's demands.
+* **Growth of Plant-Based Agriculture:** The shift towards plant-based diets fuels innovation and investment in plant-based protein sources and alternative agriculture.
+* **Technology Adoption in Farming:** Gen Z's tech-savviness may lead to greater acceptance and demand for precision agriculture, vertical farming, and other technological advancements that improve efficiency and sustainability.
+* **Challenges for Traditional Agriculture:** Conventional, large-scale agriculture that lacks transparency or sustainable practices may face increased scrutiny and declining consumer loyalty from this generation.
+* **Support for Local and Artisanal Producers:** Gen Z's desire for transparency and connection often translates to support for local farmers' markets and small-scale, artisanal producers.
+
+In summary, Generation Z is a powerful force driving significant changes in food systems and agricultural production. Their strong values concerning sustainability, transparency, health, and ethical practices, coupled with their digital fluency, are shaping a future where food is not just sustenance, but a reflection of their social and environmental consciousness.",,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|1-s2.0-S0950329325003283-main.pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,0,4,Parametric,"Sustainability emphasis, transparency, technology, health - good general synthesis"
+2026-08-04T15:28:32,S10,What role does social prestige play in shaping career choices toward or away from farming?,"Social prestige plays a significant role in shaping career choices toward or away from farming, often acting as a powerful, though sometimes subtle, influencer. Here's a breakdown of how it works:
+
+**Factors that Decrease the Prestige of Farming (Pushing Away):**
+
+*   **Association with Manual Labor and Lack of Education:** Historically, and even in some modern contexts, farming has been perceived as requiring more brawn than brains. This can lead to a belief that farming is a less intellectual or skilled profession, making it less prestigious than careers requiring higher education and mental exertion.
+*   **Perceived Low Income and Economic Instability:** While this isn't always true, the stereotype of the struggling farmer, vulnerable to market fluctuations and weather, can reduce the perceived economic stability and earning potential of farming. Careers associated with higher and more stable incomes often carry more prestige.
+*   **Lack of ""Glamour"" or Modernity:** Compared to careers in technology, finance, medicine, or creative industries, farming can be seen as less exciting, innovative, or ""modern."" Young people, particularly, might be drawn to fields that offer more perceived dynamism and societal relevance.
+*   **Rural-Urban Divide:** In many societies, urban careers are seen as more sophisticated and prestigious than rural ones. Farming, being inherently rural, can suffer from this perception, especially when there's a strong drive towards urbanization and modernization.
+*   **Limited Opportunities for Upward Mobility (Perceived):** While there are opportunities for growth and innovation in agriculture, the perception can be that it's a static career with limited avenues for advancement compared to corporate or professional ladders.
+*   **Societal Narrative and Media Portrayal:** Often, media portrayals of farmers can lean towards stereotypes that don't emphasize the complexity, innovation, or entrepreneurial spirit involved in modern agriculture, further diminishing its perceived prestige.
+
+**Factors that Can Increase the Prestige of Farming (Pulling Toward, Often in Specific Contexts):**
+
+*   **Entrepreneurship and Innovation:** Modern farming, especially sustainable, organic, or tech-driven agriculture, can be viewed as entrepreneurial and innovative. Farmers who successfully adopt new technologies or create unique market niches can gain significant respect and prestige.
+*   **Stewardship and Environmental Responsibility:** As environmental concerns grow, farming that focuses on sustainable practices, land stewardship, and food security can garner respect and admiration. This ""green"" aspect can add a layer of ethical prestige.
+*   **Food Security and Patriotism:** In times of crisis or heightened awareness about food origins, farmers can be seen as vital contributors to national well-being and food sovereignty, leading to increased respect and recognition for their essential role.
+*   **""Return to the Land"" Movement:** For some, farming represents a rejection of corporate culture, a desire for a more authentic lifestyle, or a connection to heritage. In these circles, farming can carry a different kind of prestige ï¿½ one associated with independence, self-sufficiency, and a meaningful existence.
+*   **Family Legacy and Tradition:** In some cultures and families, farming is a deeply ingrained tradition. Continuing the family farm can be a source of immense pride and social standing, even if the economic returns aren't always top-tier.
+*   **Exclusivity and High-Value Products:** Farmers producing high-quality, niche, or artisanal products (e.g., fine wines, craft cheeses, specialty produce) can achieve considerable prestige within their respective markets and communities.
+*   **Advocacy and Leadership:** Farmers who become leaders in agricultural organizations, policy advocacy, or community development can gain significant social standing beyond their immediate farming activities.
+
+**Overall Impact:**
+
+For many, especially young people in developing economies or those exposed to urban ideals, the *lack* of perceived social prestige is a significant barrier to entering farming. They might seek careers that offer higher social standing, better perceived income, and more ""modern"" lifestyles.
+
+However, as societies evolve and values shift, there's a growing recognition of the vital role of agriculture, leading to a nuanced and sometimes contradictory view of its prestige. The rise of ""agri-preneurs"" and sustainable farming advocates suggests that while traditional farming might struggle with prestige, innovative and responsible agriculture can attract respect and even admiration, influencing some to choose it as a career.",,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf,0,3,Parametric,"Covers prestige factors and counter-factors (agripreneurship, stewardship). Generic but relevant"
+2026-08-04T15:28:57,S10,How does technology influence youth attitudes toward agriculture and food systems?,"Technology significantly influences youth attitudes toward agriculture and food systems in several ways, often leading to a more nuanced and sometimes contradictory perspective:
+
+**1. Increased Awareness and Connection (Positive Influence):**
+
+*   **Information Access:** The internet, social media, and digital platforms provide unprecedented access to information about food production, sustainability, ethical farming practices, food waste, and global food security issues. This can foster a greater understanding and awareness of the complexities of agriculture and food systems.
+*   **Virtual Experiences:** Virtual reality (VR), augmented reality (AR), and even high-quality documentaries allow youth to ""experience"" farms, food processing plants, and supply chains without physical presence. This can demystify agriculture and create a sense of connection to where food comes from.
+*   **Digital Storytelling:** Farmers, food activists, and agricultural organizations use social media (Instagram, TikTok, YouTube) to share their stories, showcase modern farming techniques, and educate the public. This personalizes agriculture and can inspire interest.
+*   **Citizen Science & Data:** Apps and online platforms allow youth to participate in citizen science projects related to food, such as tracking local biodiversity, monitoring soil health, or contributing to food mapping efforts, fostering a hands-on engagement.
+
+**2. Shifting Perceptions of Agriculture as a Career (Mixed Influence):**
+
+*   **Modernization & Innovation:** Exposure to precision agriculture (drones, AI, IoT sensors), vertical farming, hydroponics, and biotechnology through technology can make agriculture appear more innovative, technologically advanced, and less labor-intensive. This can attract youth interested in STEM fields.
+*   **Entrepreneurial Opportunities:** Technology facilitates direct-to-consumer sales, e-commerce for niche products, and agritech startups, showcasing agriculture as a viable and entrepreneurial career path, rather than just traditional farming.
+*   **Digital Divide & Stereotypes:** Conversely, if technology isn't adequately integrated into agricultural education or presented realistically, youth might still perceive farming as backward, low-tech, or undesirable, especially if their primary exposure is limited to romanticized or outdated depictions.
+
+**3. Consumer Behavior and Food Choices (Significant Influence):**
+
+*   **Food Information & Health Trends:** Online resources and social media amplify discussions around healthy eating, organic food, plant-based diets, ethical sourcing, and food allergies. This empowers youth to make more informed (or sometimes misinformed) food choices.
+*   **Online Food Delivery & E-commerce:** The convenience of ordering food online from restaurants or grocery stores can disconnect youth from the actual process of food preparation and procurement, potentially reducing appreciation for the effort involved in agriculture.
+*   **""Foodie"" Culture:** Social media platforms like Instagram have fueled a ""foodie"" culture, where aesthetic presentation and unique food experiences are highly valued. This can increase interest in diverse foods and culinary arts, but may also prioritize superficial aspects over the underlying agricultural processes.
+*   **Activism and Advocacy:** Technology provides platforms for youth to engage in food system activism, whether it's advocating for sustainable practices, protesting food waste, or supporting local food movements.
+
+**4. Concerns and Skepticism (Potential Negative Influence):**
+
+*   **Misinformation and ""Fake News"":** The internet is rife with misinformation about food production, farming practices (e.g., GMOs, pesticides), and health claims. Youth, if not equipped with critical thinking skills, can develop negative or overly skeptical attitudes based on unverified information.
+*   **Ethical Concerns Amplified:** Technology can quickly spread awareness of animal welfare issues, environmental degradation linked to agriculture, or labor exploitation, leading some youth to develop strong ethical objections to certain food systems.
+*   **Digital Distraction:** While technology offers information, it also presents a myriad of distractions. The sheer volume of digital content might mean that deeper engagement with agricultural topics is overshadowed by other interests.
+
+In summary, technology acts as a powerful mediator, shaping youth attitudes by providing access to information, fostering virtual connections, influencing career perceptions, and dictating consumer behaviors. Its impact is complex, offering both immense opportunities for education and engagement, as well as challenges related to misinformation and potential detachment from the tangible realities of food production.",,Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf|Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf,0,4,Parametric,"Best Q12 across all scenarios - covers VR/AR, agritech, social media influence, misinformation risks"
+2026-08-04T15:29:17,S10,How do younger and older generations differ in their relationship with agricultural production and food consumption?,"Younger and older generations often exhibit distinct relationships with agricultural production and food consumption, shaped by historical context, technological advancements, evolving values, and economic realities.
+
+Here's a breakdown of some key differences:
+
+**Agricultural Production:**
+
+*   **Direct Involvement/Knowledge:**
+    *   **Older Generations (e.g., Boomers, some Gen X):** More likely to have had direct experience with agricultural production, either growing up on farms, having family members who farmed, or living in more rural areas where farming was a visible and central industry. This often translates to a deeper understanding of seasonal cycles, labor involved, and the challenges farmers face. They might have learned traditional farming methods.
+    *   **Younger Generations (e.g., Millennials, Gen Z):** Generally less direct involvement. Most have grown up in increasingly urbanized or suburbanized environments, often far removed from the actual production of food. Their understanding might come more from media, education, or specific interest groups rather than firsthand experience.
+*   **Perception of Technology:**
+    *   **Older Generations:** May view technological advancements in agriculture (e.g., GMOs, large-scale industrial farming) with a mix of appreciation for efficiency and a degree of skepticism or nostalgia for traditional methods. They've witnessed the transition from more manual labor to mechanized farming.
+    *   **Younger Generations:** Tend to be more open to and even expect technological integration in agriculture, often focusing on sustainability, precision farming, and innovative solutions to food security. However, they can also be highly critical of certain technologies, particularly those perceived as harmful to the environment or health.
+*   **Interest in Farming as a Career:**
+    *   **Older Generations:** Many grew up in an era where farming was a common and respected profession, though it was often economically challenging.
+    *   **Younger Generations:** While there's a growing ""back-to-the-land"" movement and interest in sustainable or urban farming, farming is generally not seen as a primary career path for most. Those who do enter agriculture are often driven by passion for sustainability, community, or technological innovation rather than simply inheriting a family farm.
+
+**Food Consumption:**
+
+*   **Dietary Preferences and Trends:**
+    *   **Older Generations:** Often grew up with more traditional, meat-and-potatoes diets. Convenience foods became popular in their lifetime, but there might be a strong adherence to familiar recipes and less experimentation.
+    *   **Younger Generations:** More diverse and experimental palates. Higher prevalence of vegetarian, vegan, and flexitarian diets. Stronger interest in global cuisines, functional foods, and trending superfoods.
+*   **Emphasis on Health and Wellness:**
+    *   **Older Generations:** Health concerns often focus on traditional issues like heart health or diabetes, with an emphasis on doctor-recommended diets.
+    *   **Younger Generations:** Broader focus on ""wellness"" that includes mental health, gut health, ethical sourcing, and environmental impact alongside traditional health metrics. This leads to interest in organic, local, non-GMO, and free-from products.
+*   **Value of Convenience:**
+    *   **Older Generations:** Appreciate convenience, especially as they age, but may also have strong cooking traditions.
+    *   **Younger Generations:** High demand for convenience, leading to growth in meal kits, ready-to-eat meals, food delivery services, and on-the-go options. Time is often seen as a scarce resource.
+*   **Information Sources and Trust:**
+    *   **Older Generations:** More likely to rely on traditional media (TV, newspapers), doctors, or long-standing brands for food information and recommendations.
+    *   **Younger Generations:** Heavily influenced by social media, influencers, food blogs, online reviews, and peer recommendations. They often seek out transparency from brands and are more likely to question established norms.
+*   **Sustainability and Ethics:**
+    *   **Older Generations:** May have a general awareness of environmental issues, but sustainability in food choices might be less of a primary driver than cost or familiarity.
+    *   **Younger Generations:** Stronger emphasis on sustainable, ethically sourced, and environmentally friendly food. Concerns about animal welfare, carbon footprint, food waste, and fair trade practices significantly influence purchasing decisions. They are often willing to pay a premium for products aligning with these values.
+*   **Local and Organic Foods:**
+    *   **Older Generations:** May value local produce from farmers' markets for freshness and supporting local economies, but organic might be seen as an expensive luxury.
+    *   **Younger Generations:** Often prioritize local and organic as part of a broader commitment to health, sustainability, and supporting smaller-scale agriculture. They are more likely to seek out direct-from-farm options or subscribe to CSA (Community Supported Agriculture) boxes.
+
+In summary, older generations often have a more direct, traditional connection to agriculture and food, shaped by historical context and direct experience. Younger generations, while often further removed from production, are driven by a complex interplay of health, ethical, environmental, and technological considerations that significantly influence their food consumption choices and their perception of how food should be produced.",,Artikel+Ratna+dkk+2025+(final+author)+(CE).pdf|Suwanan_2023_IOP_Conf._Ser.__Earth_Environ._Sci._1246_012037.pdf|1-s2.0-S0950329325003283-main.pdf,0,4,Parametric,"Comprehensive - direct involvement, technology perception, dietary preferences, sustainability emphasis"
+2026-08-04T15:29:40,S10,What sustainable food behaviors are observed among younger generations and how do they connect to agricultural systems?,"Younger generations, particularly Gen Z and Millennials, are demonstrating a growing commitment to sustainable food behaviors. These behaviors often stem from increased awareness of climate change, ethical considerations, and personal health, and they significantly connect to agricultural systems in several ways:
+
+**Observed Sustainable Food Behaviors:**
+
+*   **Increased Plant-Based Diets (Veganism/Vegetarianism/Flexitarianism):** This is perhaps the most prominent trend. Younger generations are more likely to adopt fully plant-based diets or significantly reduce their meat consumption.
+    *   **Connection to Agricultural Systems:** This directly impacts the demand for plant-based proteins (legumes, soy, nuts, seeds, grains) and plant-based alternatives (oat milk, Impossible/Beyond Meat). It can reduce the demand for land-intensive livestock farming and the associated greenhouse gas emissions, water usage, and feed production. It also encourages innovation in plant breeding for novel protein sources.
+*   **Preference for Locally Sourced and Seasonal Foods:** There's a strong desire to understand the origin of food and support local economies.
+    *   **Connection to Agricultural Systems:** This boosts demand for local and small-scale farms, often encouraging diversified farming practices and reducing food miles. It can foster community-supported agriculture (CSAs) and farmers' markets, connecting consumers directly to producers. It also emphasizes the importance of regional agricultural biodiversity and traditional crops.
+*   **Reduced Food Waste:** Younger consumers are more conscious of food waste and actively seek ways to minimize it, from mindful shopping to repurposing leftovers.
+    *   **Connection to Agricultural Systems:** While primarily a consumer-level behavior, reduced food waste upstream (in processing and retail) and downstream (in homes) lessens the burden on agricultural resources. It means fewer resources (land, water, labor, energy) are used to produce food that ultimately goes uneaten, making the entire food system more efficient.
+*   **Ethical and Transparent Sourcing:** They often seek out brands and products with clear ethical credentials, such as fair trade, organic certification, and sustainable labor practices.
+    *   **Connection to Agricultural Systems:** This drives demand for certified sustainable farming practices, fair wages for agricultural workers, and humane treatment of animals. It can push for better labor standards in supply chains and incentivize farmers to adopt environmentally friendly methods to meet certification requirements.
+*   **Reduced Packaging and Sustainable Packaging Choices:** Concerns about plastic pollution are high, leading to a preference for minimal or compostable packaging.
+    *   **Connection to Agricultural Systems:** While not directly affecting farming practices, it influences the post-harvest handling and distribution of agricultural products. It can encourage innovation in biodegradable materials derived from agricultural byproducts (e.g., mushroom packaging, corn-based plastics) and push for bulk purchasing options from farms.
+*   **DIY Food Production (Gardening, Foraging):** A growing interest in growing their own food, even in urban settings, and learning about foraging.
+    *   **Connection to Agricultural Systems:** This directly connects individuals to food production, fostering a deeper understanding of agricultural cycles, seasonality, and the effort involved in growing food. It can lead to a greater appreciation for farmers and promote biodiversity in urban environments.
+
+**Overall Connection to Agricultural Systems:**
+
+These sustainable food behaviors collectively exert significant pressure on agricultural systems to evolve and adapt. They drive demand for:
+
+*   **Diversified agriculture:** Moving away from monocultures towards a broader range of crops and livestock (if applicable).
+*   **Agroecological practices:** Farming methods that prioritize ecological health, biodiversity, and soil fertility (e.g., cover cropping, no-till, crop rotation).
+*   **Reduced chemical inputs:** Lower demand for synthetic pesticides and fertilizers.
+*   **Innovation in sustainable food production:** Research and development into alternative proteins, precision agriculture, and resilient crop varieties.
+*   **Shorter supply chains:** More direct connections between producers and consumers.
+*   **Fairer labor practices:** A greater emphasis on the social well-being of agricultural workers.
+
+In essence, younger generations are acting as a powerful consumer force, shaping the future direction of food production towards more environmentally friendly, ethically sound, and resilient agricultural systems.",,nutrients-18-00758.pdf|1-s2.0-S0950329325003283-main.pdf,0,4,Parametric,"Plant-based, local sourcing, food waste, ethical sourcing, DIY production - connection to agricultural systems explicit"
+2026-08-04T15:30:07,S10,How does emotional regulation and eating behavior relate to sustainable food choices in Gen Z?,"Emotional regulation and eating behavior are intricately linked to sustainable food choices in Gen Z, primarily through the lens of their values, the challenges they face, and their access to information and resources.
+
+Here's a breakdown of how they relate:
+
+**1. Emotional Regulation and Sustainable Food Choices:**
+
+*   **Stress and Anxiety:** Gen Z faces unique stressors, including climate anxiety, social media pressure, and economic uncertainty. Poor emotional regulation can lead to:
+    *   **Impulsive and Comfort Eating:** When stressed or anxious, individuals may gravitate towards familiar, often less healthy, and less sustainable options (e.g., highly processed snacks, fast food) as a coping mechanism. These choices often have higher carbon footprints, more packaging, and less ethical sourcing.
+    *   **Ignoring Long-Term Consequences:** Emotional distress can narrow focus to immediate gratification, making it harder to consider the long-term environmental and social impacts of food choices.
+    *   **Decision Fatigue:** Constant emotional strain can lead to decision fatigue, making it easier to opt for the most convenient, rather than the most sustainable, food options.
+*   **Positive Emotions and Pro-Environmental Behavior:** Conversely, good emotional regulation, including self-awareness and self-compassion, can foster:
+    *   **Mindful Eating:** Being present during meals allows for a greater appreciation of food, potentially leading to reduced waste and a preference for higher quality, sustainably produced items.
+    *   **Intrinsic Motivation:** Feeling good about one's actions and aligning choices with personal values (e.g., environmentalism) can strengthen the commitment to sustainable eating.
+    *   **Resilience to Social Pressures:** Gen Z is highly influenced by peers and social media. Strong emotional regulation can help them resist trends that contradict their sustainable values and instead make independent, informed choices.
+*   **Guilt and Shame:** While not always positive, feelings of guilt or shame associated with unsustainable food choices (e.g., food waste, excessive meat consumption) can, if managed constructively, motivate changes towards more sustainable habits. However, if unmanaged, it can lead to avoidance or further unhealthy coping.
+
+**2. Eating Behavior and Sustainable Food Choices:**
+
+*   **Dietary Patterns:** Gen Z exhibits diverse eating behaviors, but certain patterns have direct implications for sustainability:
+    *   **Plant-Forward and Vegan/Vegetarian Trends:** A significant portion of Gen Z is adopting plant-based diets or reducing meat consumption, driven by ethical, health, and environmental concerns. This directly contributes to sustainability by lowering carbon emissions, reducing land and water use, and decreasing animal welfare concerns.
+    *   **Snacking Culture:** Increased snacking, often involving single-use packaging and processed foods, can counteract sustainable efforts.
+    *   **Food Waste:** Despite awareness, food waste remains a significant issue. Eating behaviors like over-purchasing, not planning meals, and not utilizing leftovers contribute to this.
+    *   **Value-Driven Consumption:** Gen Z is more likely to align their purchases with their values. This manifests in:
+        *   **Support for Local and Ethical Brands:** A preference for locally sourced, organic, fair-trade, and ethically produced foods.
+        *   **Packaging Consciousness:** Concern over excessive plastic and non-recyclable packaging.
+        *   **Ingredient Scrutiny:** Interest in knowing where food comes from and how it's produced.
+*   **Mindful vs. Mindless Eating:**
+    *   **Mindful Eating:** Promotes conscious choices, portion control, and reduced waste, all of which are pillars of sustainable eating.
+    *   **Mindless Eating:** Often leads to overconsumption, poor nutritional choices, and increased waste, making sustainable eating less likely.
+*   **Social and Cultural Influences:** Eating behaviors are heavily influenced by social norms and cultural trends, which for Gen Z often originate from social media. This can be a double-edged sword:
+    *   **Positive Influence:** Trends promoting plant-based diets, zero-waste cooking, or supporting local farmers can spread rapidly.
+    *   **Negative Influence:** Trends promoting overconsumption, highly processed ""viral"" foods, or unhealthy dieting can undermine sustainable efforts.
+
+**Interconnections and Implications for Gen Z:**
+
+*   **Education and Awareness:** Gen Z is generally well-informed about climate change and its impact. However, translating this awareness into consistent sustainable eating habits requires practical knowledge about *how* to make those choices and *how* to manage the emotional challenges that arise.
+*   **Accessibility and Affordability:** Sustainable food choices can sometimes be more expensive or less accessible. Emotional regulation plays a role in navigating these challenges ï¿½ for example, finding creative ways to eat sustainably on a budget rather than giving up due to frustration.
+*   **Personal Identity:** Sustainable eating is often intertwined with Gen Z's personal identity and their desire to be seen as ethical and responsible global citizens. This can provide strong motivation, but also pressure.
+*   **Digital Influence:** Social media can be a powerful tool for promoting sustainable eating, but it also contributes to emotional overload and comparison, which can impact food choices.
+
+In conclusion, for Gen Z, emotional regulation is not just about managing feelings; it's a crucial skill that underpins their ability to consistently make sustainable food choices, especially in the face of stress, conflicting information, and the demands of modern life. Their existing eating behaviors, particularly their inclination towards plant-based diets and value-driven consumption, position them as a generation with significant potential to drive sustainable food system change, provided they can effectively manage their emotional landscape.",,nutrients-18-00758.pdf,0,4,Parametric,"Detailed - stress/anxiety ? impulsive eating, mindful eating ? sustainable choices, Gen Z identity and sustainability"

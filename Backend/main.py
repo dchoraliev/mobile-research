@@ -40,6 +40,12 @@ SYSTEM_PROMPT_PHOTO = (
     "Do not refuse to answer if relevant context or a photo exists."
 )
 
+SYSTEM_PROMPT_CLOUD_ONLY = (
+    "You are a research assistant. Answer the user's question directly from your own "
+    "knowledge — no knowledge-base context or document retrieval is available for this query. "
+    "Answer as helpfully and accurately as you can."
+)
+
 # ── Measurement logging ───────────────────────────────────────────────────────
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MEASUREMENTS_DIR = os.path.join(BASE_DIR, "measurements")
@@ -398,6 +404,28 @@ def call_openrouter_conversational(question: str) -> str:
                 time.sleep(2)
     return "I'm here to help — could you ask me something about the documents?"
 
+def call_openrouter_cloud_only(question: str) -> str:
+    """Answer with no OCR, no BLIP, no retrieval — question goes straight to the LLM (Scenario 10)."""
+    client = OpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key=os.getenv("OPENROUTER_API_KEY"),
+    )
+    for model in MODELS:
+        for attempt in range(2):
+            try:
+                response = client.chat.completions.create(
+                    model=model,
+                    messages=[
+                        {"role": "system", "content": SYSTEM_PROMPT_CLOUD_ONLY},
+                        {"role": "user",   "content": question},
+                    ],
+                )
+                return response.choices[0].message.content
+            except Exception as e:
+                print(f"Model {model} attempt {attempt + 1} failed: {e}")
+                time.sleep(2)
+    return "LLM unavailable — all providers failed."
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 #   RAG query
@@ -495,6 +523,50 @@ async def query_knowledge_base(req: QueryRequest, request: Request):
 async def search_alias(req: QueryRequest, request: Request):
     """Alias for /query — keeps the existing frontend working without changes."""
     return await query_knowledge_base(req, request)
+
+
+class CloudQueryRequest(BaseModel):
+    query: str
+
+@app.post("/cloud-query")
+async def cloud_query(req: CloudQueryRequest, request: Request):
+    """
+    Cloud-only text pipeline (Scenario 10):
+      1. No OCR, no BLIP, no embedding, no Chroma retrieval, no context formatting
+      2. Question goes straight to the LLM via OpenRouter
+      3. Log answer automatically to answers.csv
+      4. Return answer and timings
+    """
+    scenario = request.headers.get("X-Scenario", "unset")
+
+    t1 = time.time()
+    llm_answer = call_openrouter_cloud_only(question=req.query)
+    request.state.llm_ms = (time.time() - t1) * 1000
+
+    try:
+        with open(ANSWERS_FILE, "a", newline="") as f:
+            csv.writer(f).writerow([
+                time.strftime("%Y-%m-%dT%H:%M:%S"),
+                scenario,
+                req.query,
+                llm_answer,
+                "",
+                0,
+                0,
+            ])
+    except OSError as e:
+        print(f"WARNING: Could not write to answers.csv (file locked?): {e}")
+
+    return {
+        "query":          req.query,
+        "context_status": "cloud_only",
+        "result_count":   0,
+        "results":        [],
+        "context":        "",
+        "sources":        [],
+        "answer":         llm_answer,
+        "timings":        {"embedding_ms": 0, "retrieval_ms": 0},
+    }
 
 
 # ══════════════════════════════════════════════════════════════════════════════
