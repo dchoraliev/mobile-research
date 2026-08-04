@@ -5,7 +5,7 @@ import * as FileSystem from "expo-file-system/legacy";
 import { cameraStyles as styles } from "../styles/camera.styles";
 import { BACKEND_HTTP } from "../config";
 
-export default function CameraModal({ visible, onClose, onPhotoCaptured, scenario = "unset" }) {
+export default function CameraModal({ visible, onClose, onPhotoCaptured, scenario = "unset", mode = "ocr" }) {
   const cameraRef = useRef(null);
   const [capturing, setCapturing] = useState(false);
   const [status, setStatus] = useState("");
@@ -59,34 +59,40 @@ export default function CameraModal({ visible, onClose, onPhotoCaptured, scenari
 
       console.log("imageBase64 length:", imageBase64?.length ?? "NULL");
 
-      // Step 3: OCR via backend — only if base64 was successfully read
-      setStatus("Reading text...");
+      // Step 3: OCR/BLIP via backend — skipped entirely when mode === "none"
       let ocrText = "";
+      let captionText = "";
 
-      if (imageBase64 && imageBase64.length > 100) {
-        try {
-          const ocrRes = await fetch(`${BACKEND_HTTP}/ocr`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-Scenario": scenario,
-            },
-            body: JSON.stringify({ image_base64: imageBase64 }),
-          });
-
-          if (ocrRes.ok) {
-            const ocrJson = await ocrRes.json();
-            ocrText = ocrJson.text ?? "";
-            console.log("OCR result:", ocrText || "(no text found)");
-          } else {
-            const rawText = await ocrRes.text();
-            console.log("OCR server error:", ocrRes.status, rawText.slice(0, 200));
-          }
-        } catch (ocrErr) {
-          console.log("OCR failed (non-fatal):", ocrErr);
-        }
+      if (mode === "none") {
+        console.log("mode=none — skipping OCR and BLIP, raw image goes straight to the LLM");
       } else {
-        console.log("Skipping OCR — imageBase64 empty or too short:", imageBase64?.length);
+        setStatus("Reading text...");
+
+        if (imageBase64 && imageBase64.length > 100) {
+          try {
+            const ocrRes = await fetch(`${BACKEND_HTTP}/ocr`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-Scenario": scenario,
+              },
+              body: JSON.stringify({ image_base64: imageBase64 }),
+            });
+
+            if (ocrRes.ok) {
+              const ocrJson = await ocrRes.json();
+              ocrText = ocrJson.text ?? "";
+              console.log("OCR result:", ocrText || "(no text found)");
+            } else {
+              const rawText = await ocrRes.text();
+              console.log("OCR server error:", ocrRes.status, rawText.slice(0, 200));
+            }
+          } catch (ocrErr) {
+            console.log("OCR failed (non-fatal):", ocrErr);
+          }
+        } else {
+          console.log("Skipping OCR — imageBase64 empty or too short:", imageBase64?.length);
+        }
       }
 
       // Step 4: Upload photo to backend
@@ -126,8 +132,8 @@ export default function CameraModal({ visible, onClose, onPhotoCaptured, scenari
 
       const fullUrl = `${BACKEND_HTTP}${json.url}`;
 
-      // Step 5: Return photo URL, OCR text, and base64 to App
-      onPhotoCaptured({ photoUrl: fullUrl, ocrText, imageBase64 });
+      // Step 5: Return photo URL, OCR text, caption text, and base64 to App
+      onPhotoCaptured({ photoUrl: fullUrl, ocrText, captionText, imageBase64 });
       onClose();
 
     } catch (err) {
@@ -175,7 +181,11 @@ export default function CameraModal({ visible, onClose, onPhotoCaptured, scenari
             </>
           ) : (
             <Text style={styles.hint}>
-              {cameraReady ? "Tap to capture · OCR runs automatically" : "Starting camera..."}
+              {cameraReady
+                ? mode === "none"
+                  ? "Tap to capture · Photo goes straight to the LLM"
+                  : "Tap to capture · OCR runs automatically"
+                : "Starting camera..."}
             </Text>
           )}
           <TouchableOpacity

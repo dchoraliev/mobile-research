@@ -404,12 +404,20 @@ def call_openrouter_conversational(question: str) -> str:
                 time.sleep(2)
     return "I'm here to help — could you ask me something about the documents?"
 
-def call_openrouter_cloud_only(question: str) -> str:
-    """Answer with no OCR, no BLIP, no retrieval — question goes straight to the LLM (Scenario 10)."""
+def call_openrouter_cloud_only(question: str, image_base64: Optional[str] = None) -> str:
+    """Answer with no OCR, no BLIP, no retrieval — question (and optionally the raw image) goes
+    straight to the LLM (Scenarios 10 & 11)."""
     client = OpenAI(
         base_url="https://openrouter.ai/api/v1",
         api_key=os.getenv("OPENROUTER_API_KEY"),
     )
+
+    user_content = (
+        [{"type": "text", "text": question},
+         {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{image_base64}"}}]
+        if image_base64 else question
+    )
+
     for model in MODELS:
         for attempt in range(2):
             try:
@@ -417,7 +425,7 @@ def call_openrouter_cloud_only(question: str) -> str:
                     model=model,
                     messages=[
                         {"role": "system", "content": SYSTEM_PROMPT_CLOUD_ONLY},
-                        {"role": "user",   "content": question},
+                        {"role": "user",   "content": user_content},
                     ],
                 )
                 return response.choices[0].message.content
@@ -527,20 +535,21 @@ async def search_alias(req: QueryRequest, request: Request):
 
 class CloudQueryRequest(BaseModel):
     query: str
+    image_base64: Optional[str] = None
 
 @app.post("/cloud-query")
 async def cloud_query(req: CloudQueryRequest, request: Request):
     """
-    Cloud-only text pipeline (Scenario 10):
+    Cloud-only pipeline (Scenarios 10 & 11):
       1. No OCR, no BLIP, no embedding, no Chroma retrieval, no context formatting
-      2. Question goes straight to the LLM via OpenRouter
+      2. Question (and raw image, if attached) goes straight to the LLM via OpenRouter
       3. Log answer automatically to answers.csv
       4. Return answer and timings
     """
     scenario = request.headers.get("X-Scenario", "unset")
 
     t1 = time.time()
-    llm_answer = call_openrouter_cloud_only(question=req.query)
+    llm_answer = call_openrouter_cloud_only(question=req.query, image_base64=req.image_base64 or None)
     request.state.llm_ms = (time.time() - t1) * 1000
 
     try:

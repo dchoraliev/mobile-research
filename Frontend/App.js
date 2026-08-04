@@ -15,10 +15,17 @@ import BrowseModal from "./components/BrowseModal";
 
 // ── Active scenario — change this one line when switching scenarios ────────────
 // S1 | S2 | S3a | S3b | S4 | S5 | S6 | S7 | S10 | S11 | S12 | S15
-const SCENARIO = "S10";
+const SCENARIO = "S11";
 
 // Set to true during scenario testing to show retrieved chunks in chat
 const SHOW_DEBUG_CHUNKS = false;
+
+// Scenarios that skip OCR/BLIP entirely and hit /cloud-query directly
+const CLOUD_ONLY_SCENARIOS = ["S10", "S11"];
+// Scenarios where the raw image is sent along with the cloud-only query
+const SCENARIOS_WITH_IMAGE = ["S11"];
+// CameraModal capture mode — "none" skips OCR/BLIP, just captures base64 + uploads
+const CAPTURE_MODE = CLOUD_ONLY_SCENARIOS.includes(SCENARIO) ? "none" : "ocr";
 
 export default function App() {
   const socketRef = useRef(null);
@@ -118,7 +125,8 @@ export default function App() {
 
     addMessage({ type: "system", text: `Thinking... [${SCENARIO}]` });
 
-    const isCloudOnly = SCENARIO === "S10";
+    const isCloudOnly = CLOUD_ONLY_SCENARIOS.includes(SCENARIO);
+    const sendImage = SCENARIOS_WITH_IMAGE.includes(SCENARIO);
 
     try {
       const res = await scenarioFetch(
@@ -127,7 +135,10 @@ export default function App() {
           method: "POST",
           body: JSON.stringify(
             isCloudOnly
-              ? { query: userQuery }
+              ? {
+                  query:        userQuery,
+                  image_base64: sendImage ? (capture.imageBase64 ?? null) : null,
+                }
               : {
                   query:        userQuery,
                   ocr_text:     capture.ocrText    ?? "",
@@ -186,15 +197,18 @@ export default function App() {
     setCameraModalVisible(true);
   };
 
-  const handlePhotoCaptured = ({ photoUrl, ocrText, imageBase64 }) => {
+  const handlePhotoCaptured = ({ photoUrl, ocrText, captionText, imageBase64 }) => {
     setCurrentPhotoUrl(photoUrl);
     broadcastPhotoSelection(photoUrl);
-    setPendingCapture({ photoUrl, ocrText, imageBase64 });
+    setPendingCapture({ photoUrl, ocrText, captionText, imageBase64 });
     addMessage({
       type: "system",
-      text: ocrText
-        ? `Photo captured · OCR found text (${ocrText.length} chars) · Type your question`
-        : "Photo captured · No text detected · Type your question to search the knowledge base",
+      text:
+        CAPTURE_MODE === "none"
+          ? "Photo captured · Type your question"
+          : ocrText
+            ? `Photo captured · OCR found text (${ocrText.length} chars) · Type your question`
+            : "Photo captured · No text detected · Type your question to search the knowledge base",
     });
   };
 
@@ -275,6 +289,7 @@ export default function App() {
             onClose={() => setCameraModalVisible(false)}
             onPhotoCaptured={handlePhotoCaptured}
             scenario={SCENARIO}
+            mode={CAPTURE_MODE}
           />
 
           <BrowseModal
