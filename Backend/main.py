@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 import time
 import pytesseract
-pytesseract.pytesseract.tesseract_cmd = r"C:\Users\choralievd\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 load_dotenv()
 
